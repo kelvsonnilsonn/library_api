@@ -16,8 +16,9 @@ public class Book {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="author_username")
+    @JoinColumn(name="author_id")
     private Client author;
+
     private LocalDateTime createdAt;
     private boolean isBorrowed;
 
