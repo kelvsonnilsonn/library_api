@@ -2,7 +2,6 @@ package com.library.api.controller;
 
 import com.library.api.dto.BookDTO;
 import com.library.api.service.BookService;
-import com.library.api.service.UserService;
 import com.library.api.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
