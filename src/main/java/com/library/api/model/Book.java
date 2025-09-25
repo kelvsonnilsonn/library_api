@@ -9,15 +9,21 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "books")
 public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Embedded
+    private ISBN isbn;
+
+    private String title;
+
     @ManyToOne
     @JoinColumn(name="author_id")
-    private Client author;
+    private User author;
 
     private LocalDateTime createdAt;
     private boolean isBorrowed;
@@ -25,6 +31,13 @@ public class Book {
     @Enumerated(EnumType.STRING)
     private BookType type;
 
-    public Book(String author, BookType type){}
+    public Book(User author, BookType type, ISBN isbn, String title){
+        this.author = author;
+        this.type = type;
+        this.isbn = isbn;
+        this.title = title;
+        this.createdAt = LocalDateTime.now();
+        this.isBorrowed = false;
+    }
 
 }
