@@ -1,4 +1,11 @@
 package com.library.api.dto;
 
-public record BookDTO() {
+import com.library.api.enums.BookType;
+
+public record BookDTO(
+        String title,
+        String isbn,
+        Long authorId,
+        BookType type
+) {
 }
