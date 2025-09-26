@@ -1,5 +1,7 @@
 package com.library.api.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.library.api.exception.InvalidISBNException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -16,7 +18,8 @@ public class ISBN {
     @Column(name = "isbn_number", unique = true, nullable = false)
     public String number;
 
-    public ISBN(String number){
+    @JsonCreator
+    public ISBN(@JsonProperty("isbn") String number){
         validate(number);
         this.number = number;
     }
