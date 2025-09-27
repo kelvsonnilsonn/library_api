@@ -19,16 +19,15 @@ public class BookService {
     private final BookRepository bookRepository;
     private final UserService userService;
 
-    @Autowired
     public BookService(BookRepository bookRepository, UserService userService) {
         this.bookRepository = bookRepository;
         this.userService = userService;
     }
 
-    public void create(BookRequestDTO book){
+    public BookResponseDTO create(BookRequestDTO book){
         User author = userService.findEntityById(book.authorId());
-        Book createBook = BookMapper.dtoToBook(book, author);
-        bookRepository.save(createBook);
+        Book savedBook = bookRepository.save(BookMapper.dtoToBook(book, author));
+        return BookMapper.toResponse(savedBook);
     }
 
     public String delete(Long id) {
