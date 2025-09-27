@@ -1,4 +1,4 @@
-package com.library.api.controller;
+package com.library.api.controller.api;
 
 import com.library.api.dto.BookRequestDTO;
 import com.library.api.dto.BookResponseDTO;
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(AppConstants.BOOK_BASE_PATH)
-public class BookController implements BookAPI{
+public class BookApiController implements BookAPI{
 
     private final BookService bookService;
 
-    public BookController(BookService bookService){
+    public BookApiController(BookService bookService){
         this.bookService = bookService;
     }
 

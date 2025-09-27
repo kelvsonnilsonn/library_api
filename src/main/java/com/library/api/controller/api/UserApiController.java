@@ -1,4 +1,4 @@
-package com.library.api.controller;
+package com.library.api.controller.api;
 
 import com.library.api.dto.UserRequestDTO;
 import com.library.api.dto.UserResponseDTO;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(AppConstants.USER_BASE_PATH)
-public class UserController implements UserAPI{
+public class UserApiController implements UserAPI{
 
     private final UserService userService;
 
-    public UserController(UserService userService){
+    public UserApiController(UserService userService){
         this.userService = userService;
     }
 
