@@ -1,10 +1,11 @@
 package com.library.api.dto;
 
 import com.library.api.enums.BookType;
+import com.library.api.model.ISBN;
 
-public record BookDTO(
+public record BookRequestDTO(
         String title,
-        String isbn,
+        ISBN isbn,
         Long authorId,
         BookType type
 ) {
