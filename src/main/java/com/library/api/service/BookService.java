@@ -1,6 +1,7 @@
 package com.library.api.service;
 
-import com.library.api.dto.BookDTO;
+import com.library.api.dto.BookRequestDTO;
+import com.library.api.dto.BookResponseDTO;
 import com.library.api.exception.BookNotFoundException;
 import com.library.api.mapper.BookMapper;
 import com.library.api.model.Book;
@@ -24,20 +25,24 @@ public class BookService {
         this.userService = userService;
     }
 
-    public void create(BookDTO book){
-        User author = userService.findById(book.authorId());
+    public void create(BookRequestDTO book){
+        User author = userService.findEntityById(book.authorId());
         Book createBook = BookMapper.dtoToBook(book, author);
         bookRepository.save(createBook);
     }
 
     public String delete(Long id) {
-        Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
+        Book book = findEntityById(id);
         bookRepository.deleteById(id);
         return String.format(AppConstants.BOOK_DELETED_MSG, book.getTitle());
     }
 
-    public BookDTO findById(Long id){
-        Book book = bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
-        return BookMapper.bookToDTO(book);
+    public BookResponseDTO findById(Long id){
+        Book book = findEntityById(id);
+        return BookMapper.toResponse(book);
+    }
+
+    public Book findEntityById(Long id){
+        return bookRepository.findById(id).orElseThrow(BookNotFoundException::new);
     }
 }
