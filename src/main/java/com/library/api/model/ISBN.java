@@ -1,7 +1,7 @@
 package com.library.api.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.library.api.exception.InvalidISBNException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -16,12 +16,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ISBN {
     @Column(name = "isbn_number", unique = true, nullable = false)
-    public String number;
+    private String number;
 
-    @JsonCreator
-    public ISBN(@JsonProperty("isbn") String number){
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public ISBN(String number){
         validate(number);
         this.number = number;
+    }
+
+    @JsonValue
+    public String getNumber(){
+        return number;
     }
 
     private void validate(String number){
