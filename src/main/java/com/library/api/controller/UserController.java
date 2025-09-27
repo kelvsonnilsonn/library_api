@@ -1,6 +1,7 @@
 package com.library.api.controller;
 
-import com.library.api.dto.UserDTO;
+import com.library.api.dto.UserRequestDTO;
+import com.library.api.dto.UserResponseDTO;
 import com.library.api.service.UserService;
 import com.library.api.util.AppConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,22 +12,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-// V1.0
+// V1.1
 
 @RestController
 @RequestMapping(AppConstants.USER_BASE_PATH)
-public class UserController {
+public class UserController implements UserAPI{
 
     private final UserService userService;
 
-    @Autowired
     public UserController(UserService userService){
         this.userService = userService;
     }
 
     @PostMapping(AppConstants.CREATE_USER_PATH)
-    public ResponseEntity<UserDTO> create(@RequestBody UserDTO userDTO){
-        userService.create(userDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
+    public ResponseEntity<UserResponseDTO> create(@RequestBody UserRequestDTO userRequestDTO){
+        UserResponseDTO response = userService.create(userRequestDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @Override
+    public ResponseEntity<String> delete(Long id) {
+        String message = userService.delete(id);
+        return ResponseEntity.ok(message);
+    }
+
+    @Override
+    public ResponseEntity<UserResponseDTO> findById(Long id) {
+        UserResponseDTO dto = userService.findById(id);
+    return ResponseEntity.status(HttpStatus.FOUND).body(dto);
     }
 }
