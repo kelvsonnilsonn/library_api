@@ -8,10 +8,9 @@ import com.library.api.model.Book;
 import com.library.api.model.User;
 import com.library.api.repository.BookRepository;
 import com.library.api.util.AppConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// V1.1
+// V1.2
 
 @Service
 public class BookService {
@@ -38,6 +37,11 @@ public class BookService {
 
     public BookResponseDTO findById(Long id){
         Book book = findEntityById(id);
+        return BookMapper.toResponse(book);
+    }
+
+    public BookResponseDTO findByIsbn(String isbn){
+        Book book = bookRepository.findByIsbn(isbn).orElseThrow(BookNotFoundException::new);
         return BookMapper.toResponse(book);
     }
 
