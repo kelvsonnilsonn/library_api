@@ -5,7 +5,6 @@ import com.library.api.dto.UserResponseDTO;
 import com.library.api.model.User;
 
 public class UserMapper {
-
     public static User dtoToUser(UserRequestDTO dto){
         return new User(dto.username(), dto.password());
     }
