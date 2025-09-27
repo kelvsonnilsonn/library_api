@@ -10,4 +10,5 @@ public interface BookAPI {
     ResponseEntity<BookResponseDTO> create(@RequestBody BookRequestDTO bookRequestDTO);
     ResponseEntity<String> delete(@RequestParam Long id);
     ResponseEntity<BookResponseDTO> findById(@RequestParam Long id);
+    ResponseEntity<BookResponseDTO> findByIsbn(@RequestParam String isbn);
 }
