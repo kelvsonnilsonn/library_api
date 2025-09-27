@@ -17,13 +17,13 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    @Autowired
     public UserService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
-    public void create(UserRequestDTO userRequestDTO){
-        userRepository.save(UserMapper.dtoToUser(userRequestDTO));
+    public UserResponseDTO create(UserRequestDTO userRequestDTO){
+        User savedUser = userRepository.save(UserMapper.dtoToUser(userRequestDTO));
+        return UserMapper.toResponse(savedUser);
     }
 
     public String delete(Long id){
