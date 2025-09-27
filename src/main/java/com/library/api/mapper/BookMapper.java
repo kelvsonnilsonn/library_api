@@ -6,7 +6,6 @@ import com.library.api.model.Book;
 import com.library.api.model.User;
 
 public class BookMapper {
-
     public static Book dtoToBook(BookRequestDTO bookRequestDTO, User author){
         return new Book(author, bookRequestDTO.type(), bookRequestDTO.isbn(), bookRequestDTO.title());
     }
