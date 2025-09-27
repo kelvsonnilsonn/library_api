@@ -1,7 +1,6 @@
 package com.library.api.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.library.api.exception.InvalidCreatePasswordException;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
@@ -12,8 +11,8 @@ import lombok.NoArgsConstructor;
 public class Password {
     public String password;
 
-    @JsonCreator
-    public Password(@JsonProperty("password") String password){
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
+    public Password(String password){
         validate(password);
         this.password = password;
     }
