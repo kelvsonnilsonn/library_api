@@ -85,16 +85,16 @@ mvn spring-boot:run
 
 ## 📖 Endpoints da API
 ### 📚 Gestão de Livros
-    Método	        Endpoint	                    Descrição	            Códigos de Resposta
-    POST	    /api/livros/create	                Criar novo livro	    201, 400, 409, 500
-    GET	    /api/livros/search?id={id}	        Buscar livro por ID	    200, 404, 500
-    GET	    /api/livros/search/isbn?isbn={isbn}	Buscar livro por ISBN	    200, 404, 500
-    DELETE	    /api/livros/delete?id={id}	        Deletar livro	            200, 404, 500
+    Método	        Endpoint	                        Descrição	            Códigos de Resposta
+    POST	    /api/livros/create	                    Criar novo livro	    201, 400, 409, 500
+    GET	        /api/livros/search?id={id}	            Buscar livro por ID	    200, 404, 500
+    GET	        /api/livros/search/isbn?isbn={isbn}	    Buscar livro por ISBN	200, 404, 500
+    DELETE	    /api/livros/delete?id={id}	            Deletar livro	        200, 404, 500
 ### 👥 Gestão de Usuários
-    Método	        Endpoint	            Descrição	            Códigos de Resposta
-    POST	    /api/users/create	        Criar novo usuário	    201, 400, 409, 500
-    GET	    /api/users/search?id={id}	Buscar usuário por ID	    200, 404, 500
-    DELETE	    /api/users/delete?id={id}	Deletar usuário	            200, 404, 500
+    Método	        Endpoint	                Descrição	                Códigos de Resposta
+    POST	    /api/users/create	            Criar novo usuário	        201, 400, 409, 500
+    GET	        /api/users/search?id={id}	    Buscar usuário por ID	    200, 404, 500
+    DELETE	    /api/users/delete?id={id}	    Deletar usuário	            200, 404, 500
 
 ## 🎯 Funcionalidades Principais
 ### 🔐 Segurança de Dados
