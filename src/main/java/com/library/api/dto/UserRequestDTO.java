@@ -1,6 +1,6 @@
 package com.library.api.dto;
 
-public record UserDTO (
+public record UserRequestDTO(
         String username,
         String password
 ) {
