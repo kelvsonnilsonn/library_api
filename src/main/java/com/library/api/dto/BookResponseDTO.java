@@ -6,6 +6,7 @@ import com.library.api.model.ISBN;
 import java.time.LocalDateTime;
 
 public record BookResponseDTO (
+        Long id,
         String title,
         ISBN isbn,
         Long authorId,
