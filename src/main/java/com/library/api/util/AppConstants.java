@@ -7,10 +7,14 @@ public class AppConstants {
 
     // =========== PATHS =========== //
     public static final String BOOK_BASE_PATH = "/api/livros";
-    public static final String CREATE_BOOK_PATH = "/create";
+
+    public static final String CREATE_PATH = "/create";
+    public static final String DELETE_PATH = "/delete";
+
+    public static final String SEARCH_PATH = "/search";
+    public static final String SEARCH_ISBN_PATH = "/search/isbn";
 
     public static final String USER_BASE_PATH = "/api/users";
-    public static final String CREATE_USER_PATH = "/create";
 
 
     // =========== SYSTEM MESSAGES =========== //
