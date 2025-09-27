@@ -42,4 +42,8 @@ public class Book {
         this.isBorrowed = false;
     }
 
+    public Long getAuthorId(){
+        return this.author.getId();
+    }
+
 }
