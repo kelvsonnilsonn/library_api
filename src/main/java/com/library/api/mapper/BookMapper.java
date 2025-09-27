@@ -11,6 +11,6 @@ public class BookMapper {
     }
 
     public static BookResponseDTO toResponse(Book book){
-        return new BookResponseDTO(book.getTitle(), book.getIsbn(), book.getAuthorId(), book.getType(), book.getCreatedAt());
+        return new BookResponseDTO(book.getId(), book.getTitle(), book.getIsbn(), book.getAuthorId(), book.getType(), book.getCreatedAt());
     }
 }
