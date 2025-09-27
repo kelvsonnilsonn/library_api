@@ -2,10 +2,14 @@ package com.library.api.model;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Table(name = "users")
 public class User {
 
@@ -19,9 +23,12 @@ public class User {
     @Embedded
     private Password password;
 
-    public User(String username, String password){
+    private LocalDateTime createdAt;
+
+    public User(String username, Password password){
         this.username = username;
-        this.password = new Password(password);
+        this.password = password;
+        this.createdAt = LocalDateTime.now();
     }
 
     public void changePassword(String oPassword){
