@@ -7,8 +7,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Livros", description = "Gestão de livros")
 public interface BookAPI {
@@ -24,17 +24,17 @@ public interface BookAPI {
     @ApiResponse(responseCode = HttpConstants.CREATED, description = "Livro deletado com sucesso")
     @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = HttpConstants.NOT_FOUND_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<String> delete(@RequestParam Long id);
+    ResponseEntity<String> delete(@PathVariable Long id);
 
     @Operation(summary = "Procurar um livro", description = "Procura um livro com ID")
     @ApiResponse(responseCode = HttpConstants.OK, description = "Livro encontrado com sucesso")
     @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = HttpConstants.NOT_FOUND_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<BookResponseDTO> findById(@RequestParam Long id);
+    ResponseEntity<BookResponseDTO> findById(@PathVariable Long id);
 
     @Operation(summary = "Procurar um livro", description = "Procurar um livro com ISBN")
     @ApiResponse(responseCode = HttpConstants.OK, description = "Livro encontrado com sucesso")
     @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = HttpConstants.NOT_FOUND_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<BookResponseDTO> findByIsbn(@RequestParam String isbn);
+    ResponseEntity<BookResponseDTO> findByIsbn(@PathVariable String isbn);
 }
