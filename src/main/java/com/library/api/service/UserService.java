@@ -9,6 +9,7 @@ import com.library.api.util.AppConstants;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 // V 1.3
 
@@ -19,23 +20,26 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @Transactional
     public UserResponseDTO create(UserRequestDTO userRequestDTO){
         User savedUser = userRepository.save(userMapper.dtoToUser(userRequestDTO));
         return userMapper.toResponse(savedUser);
     }
 
+    @Transactional
     public String delete(Long id){
         User user = findEntityById(id);
         userRepository.deleteById(id);
         return String.format(AppConstants.USER_DELETED_MSG, user.getUsername());
     }
 
-
+    @Transactional(readOnly = true)
     public UserResponseDTO findById(Long id){
         User user = findEntityById(id);
         return userMapper.toResponse(user);
     }
 
+    @Transactional(readOnly = true)
     public User findEntityById(Long id){
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
