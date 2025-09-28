@@ -4,6 +4,7 @@ import com.library.api.dto.UserRequestDTO;
 import com.library.api.dto.UserResponseDTO;
 import com.library.api.service.UserService;
 import com.library.api.util.AppConstants;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(AppConstants.USER_BASE_PATH)
+@RequiredArgsConstructor
 public class UserApiController implements UserAPI{
 
     private final UserService userService;
-
-    public UserApiController(UserService userService){
-        this.userService = userService;
-    }
 
     @PostMapping(AppConstants.CREATE_PATH)
     public ResponseEntity<UserResponseDTO> create(@RequestBody UserRequestDTO userRequestDTO){

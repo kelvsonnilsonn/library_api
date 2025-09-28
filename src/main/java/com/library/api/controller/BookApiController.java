@@ -4,6 +4,7 @@ import com.library.api.dto.BookRequestDTO;
 import com.library.api.dto.BookResponseDTO;
 import com.library.api.service.BookService;
 import com.library.api.util.AppConstants;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,13 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(AppConstants.BOOK_BASE_PATH)
+@RequiredArgsConstructor
 public class BookApiController implements BookAPI{
 
     private final BookService bookService;
-
-    public BookApiController(BookService bookService){
-        this.bookService = bookService;
-    }
 
     @PostMapping(AppConstants.CREATE_PATH)
     public ResponseEntity<BookResponseDTO> create(@RequestBody BookRequestDTO bookRequestDTO){
