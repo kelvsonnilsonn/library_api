@@ -8,20 +8,17 @@ import com.library.api.model.Book;
 import com.library.api.model.User;
 import com.library.api.repository.BookRepository;
 import com.library.api.util.AppConstants;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 // V1.2
 
 @Service
+@RequiredArgsConstructor
 public class BookService {
 
     private final BookRepository bookRepository;
     private final UserService userService;
-
-    public BookService(BookRepository bookRepository, UserService userService) {
-        this.bookRepository = bookRepository;
-        this.userService = userService;
-    }
 
     public BookResponseDTO create(BookRequestDTO book){
         User author = userService.findEntityById(book.authorId());
