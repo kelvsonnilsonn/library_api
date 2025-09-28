@@ -2,6 +2,8 @@
 Uma API RESTful robusta e bem estruturada para a gestão completa de livros e usuários. 
 Desenvolvida em Spring Boot, a arquitetura do projeto prioriza a segurança, a manutenibilidade e a adesão aos padrões REST.
 
+---
+
 ## ⚙️ Tecnologias Utilizadas
 ### Tecnologia	        Versão/Propósito
 -   Java	                JDK 21 
@@ -10,6 +12,8 @@ Desenvolvida em Spring Boot, a arquitetura do projeto prioriza a segurança, a m
 -   Banco de Dados	  `MySQL` (Com mysql-connector-j)
 -   Documentação	`springdoc-openapi-starter-webmvc-ui` (Swagger UI)
 -   Utilidades	        `Lombok`, Spring DevTools
+
+---
 
 ## 🏗️ Arquitetura e Estrutura do Projeto
 ### 📁 Estrutura de Pacotes
@@ -62,6 +66,41 @@ public class ISBN {
 }
 ```
 
+---
+
+## ✨ Evolução e Padrões Avançados
+
+O projeto passou por refatorações estratégicas para garantir **performance, consistência de dados** e **aderência total** aos princípios RESTful e SOLID.
+
+### 🔒 Robustez e Consistência de Dados (@Transactional)
+A camada de Serviço (`service/`) utiliza a anotação **`@Transactional`** para garantir as propriedades **ACID** (Atomicidade, Consistência, Isolamento, Durabilidade) nas operações de banco de dados.
+
+- **Escrita (create, delete):** Uso de `@Transactional` para garantir **rollback** automático em caso de falha.
+- **Leitura (find*):** Uso de **`@Transactional(readOnly = true)`**, que desativa o "Dirty Checking" do Hibernate, resultando em:
+    - Uso **reduzido de memória**.
+    - **Melhoria na velocidade** de execução das consultas.
+
+### 🔄 Mapeamento e Boilerplate (MapStruct)
+O código manual de mapeamento de objetos foi substituído pela biblioteca **MapStruct**.
+
+- **Benefício:** Mappers mais **limpos, legíveis** e com **menos chances de erro** e manutenção simplificada.
+
+### 🌐 Conformidade REST (100% RESTful)
+Os *endpoints* foram refatorados para máxima aderência REST.
+
+- **URIs:** Remoção de **verbos de ação** nas URIs (e.g., `/create` ou `/delete`).
+- **Identificadores:** Uso de **`@PathVariable`** para identificadores de recurso (ID e ISBN), conforme a convenção REST (ex: `/api/livros/{id}`).
+
+### 🛡️ Gerenciamento Global de Exceções
+O `GlobalExceptionHandler` foi reforçado para garantir um contrato claro com o cliente da API.
+
+- Mapeamento de exceções de domínio (e.g., `BookNotFoundException`, `UserNotFoundException`) para o código HTTP **404 Not Found**.
+
+### 📄 Respostas Paginadas (PageResponse)
+- Implementação de um `PageResponse` com *Static Factory Method* (`fromPage()`) para padronizar as respostas da API, incluindo metadados essenciais de **paginação**.
+
+---
+
 ## 🚀 Como Executar o Projeto
 ### Pré-requisitos
 - Java Development Kit (JDK) 21
@@ -84,17 +123,24 @@ mvn spring-boot:run
 ```
 
 ## 📖 Endpoints da API
+**Nota:** A API segue o padrão RESTful, usando o **Método HTTP** para indicar a operação e os **`{id}`** ou **`{isbn}`** como variáveis de caminho (Path Variables).
+
 ### 📚 Gestão de Livros
-    Método	        Endpoint	                        Descrição	            Códigos de Resposta
-    POST	    /api/livros/create	                    Criar novo livro	    201, 400, 409, 500
-    GET	        /api/livros/search?id={id}	            Buscar livro por ID	    200, 404, 500
-    GET	        /api/livros/search/isbn?isbn={isbn}	    Buscar livro por ISBN	200, 404, 500
-    DELETE	    /api/livros/delete?id={id}	            Deletar livro	        200, 404, 500
+| Método | Endpoint | Descrição | Códigos de Resposta |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/api/livros` | Criar novo livro | 201, 400, 409, 500 |
+| **GET** | `/api/livros/{id}` | Buscar livro por ID | 200, 404, 500 |
+| **GET** | `/api/livros/isbn/{isbn}` | Buscar livro por ISBN | 200, 404, 500 |
+| **DELETE** | `/api/livros/{id}` | Deletar livro | 200, 404, 500 |
+| **GET** | `/api/livros` | Listar livros (Resposta Paginada) | 200, 500 |
+
 ### 👥 Gestão de Usuários
-    Método	        Endpoint	                Descrição	                Códigos de Resposta
-    POST	    /api/users/create	            Criar novo usuário	        201, 400, 409, 500
-    GET	        /api/users/search?id={id}	    Buscar usuário por ID	    200, 404, 500
-    DELETE	    /api/users/delete?id={id}	    Deletar usuário	            200, 404, 500
+| Método | Endpoint | Descrição | Códigos de Resposta |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/api/users` | Criar novo usuário | 201, 400, 409, 500 |
+| **GET** | `/api/users/{id}` | Buscar usuário por ID | 200, 404, 500 |
+| **DELETE** | `/api/users/{id}` | Deletar usuário | 200, 404, 500 |
+---
 
 ## 🎯 Funcionalidades Principais
 ### 🔐 Segurança de Dados
@@ -129,6 +175,8 @@ public class GlobalExceptionHandler {
 - InvalidISBNException - ISBN inválido (400)
 - InvalidCreatePasswordException - Senha inválida (400)
 
+---
+
 ## 🔄 Mapeamento e Conversão
 ### BookMapper
 ```java
@@ -144,16 +192,15 @@ public class BookMapper {
 ```
 ### UserMapper
 ```java
-public class UserMapper {
-    public static User dtoToUser(UserRequestDTO dto){
-        return new User(dto.username(), dto.password());
-    }
-
-    public static UserResponseDTO toResponse(User user){
-        return new UserResponseDTO(user.getId(), user.getUsername(), user.getCreatedAt());
-    }
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+    User dtoToUser(UserRequestDTO dto);
+    
+    UserResponseDTO toResponse(User user);
 }
 ```
+
+---
 
 ## 📊 Constantes e Configurações
 ### AppConstants
@@ -161,7 +208,6 @@ public class UserMapper {
 public class AppConstants {
     public static final String BOOK_BASE_PATH = "/api/livros";
     public static final String USER_BASE_PATH = "/api/users";
-    public static final String CREATE_PATH = "/create";
     public static final String BOOK_NOT_FOUND_MESSAGE = "O livro não foi encontrado";
     // ... mais constantes
 }
@@ -177,20 +223,22 @@ public class HttpConstants {
 }
 ```
 
+---
+
 ## 🔍 Documentação Interativa
 Acesse a documentação Swagger UI após executar a aplicação:
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - API Docs: http://localhost:8080/api-docs
 
 ## 💡 Exemplos de Uso
-- Criar Usuário `POST /api/users/create`
+- Criar Usuário `POST /api/users`
 ```json
 {
     "username": "joao.silva",
     "password": "senha123"
 }
 ```
-- Criar Livro `POST /api/livros/create`
+- Criar Livro `POST /api/livros/`
 ```json
 {
     "title": "Dom Casmurro",
