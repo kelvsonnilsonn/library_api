@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// V1.1
+// V1.3
 
 @RestController
 @RequestMapping(AppConstants.USER_BASE_PATH)
@@ -18,20 +18,20 @@ public class UserApiController implements UserAPI{
 
     private final UserService userService;
 
-    @PostMapping(AppConstants.CREATE_PATH)
+    @PostMapping
     public ResponseEntity<UserResponseDTO> create(@RequestBody UserRequestDTO userRequestDTO){
         UserResponseDTO response = userService.create(userRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @DeleteMapping(AppConstants.DELETE_PATH)
-    public ResponseEntity<String> delete(Long id) {
+    @DeleteMapping(AppConstants.ID_PATH)
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         String message = userService.delete(id);
         return ResponseEntity.ok(message);
     }
 
-    @GetMapping(AppConstants.SEARCH_PATH)
-    public ResponseEntity<UserResponseDTO> findById(Long id) {
+    @GetMapping(AppConstants.ID_PATH)
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
         UserResponseDTO dto = userService.findById(id);
     return ResponseEntity.status(HttpStatus.FOUND).body(dto);
     }
