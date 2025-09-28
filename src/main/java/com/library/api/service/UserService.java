@@ -7,23 +7,24 @@ import com.library.api.model.User;
 import com.library.api.repository.UserRepository;
 import com.library.api.util.AppConstants;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-// V 1.2
+// V 1.3
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, UserMapper userMapper){
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     public UserResponseDTO create(UserRequestDTO userRequestDTO){
-        User savedUser = userRepository.save(UserMapper.dtoToUser(userRequestDTO));
-        return UserMapper.toResponse(savedUser);
+        User savedUser = userRepository.save(userMapper.dtoToUser(userRequestDTO));
+        return userMapper.toResponse(savedUser);
     }
 
     public String delete(Long id){
@@ -35,7 +36,7 @@ public class UserService {
 
     public UserResponseDTO findById(Long id){
         User user = findEntityById(id);
-        return UserMapper.toResponse(user);
+        return userMapper.toResponse(user);
     }
 
     public User findEntityById(Long id){
