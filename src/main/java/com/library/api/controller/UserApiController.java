@@ -1,4 +1,4 @@
-package com.library.api.controller.api;
+package com.library.api.controller;
 
 import com.library.api.dto.UserRequestDTO;
 import com.library.api.dto.UserResponseDTO;
