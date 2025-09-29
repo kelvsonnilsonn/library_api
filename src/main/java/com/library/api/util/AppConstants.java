@@ -6,11 +6,15 @@ import lombok.experimental.UtilityClass;
 public class AppConstants {
 
     // =========== PATHS =========== //
-    public static final String BOOK_BASE_PATH = "/api/livros";
+    public static final String BOOK_BASE_PATH = "/livros";
     public static final String ID_PATH = "/{id}";
     public static final String SEARCH_ISBN_PATH = "/isbn/{isbn}";
 
-    public static final String USER_BASE_PATH = "/api/users";
+    public static final String USER_BASE_PATH = "/users";
+
+    public static final String AUTH_BASE_PATH = "/auth";
+    public static final String LOGIN_PATH = "/login";
+    public static final String REGISTER_PATH = "/register";
 
 
     // =========== SYSTEM MESSAGES =========== //
