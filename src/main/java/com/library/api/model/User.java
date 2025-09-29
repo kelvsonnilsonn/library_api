@@ -34,4 +34,8 @@ public class User {
     public void changePassword(String oPassword){
         this.password = password.of(oPassword);
     }
+
+    public String getPassword(){
+        return this.password.getPassword();
+    }
 }
