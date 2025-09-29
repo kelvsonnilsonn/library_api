@@ -1,7 +1,6 @@
 package com.library.api.service;
 
 import com.library.api.dto.PageResponseDTO;
-import com.library.api.dto.UserRequestDTO;
 import com.library.api.dto.UserResponseDTO;
 import com.library.api.mapper.UserMapper;
 import com.library.api.model.User;
@@ -14,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// V 1.3
+// V 1.4
 
 @Service
 @RequiredArgsConstructor
@@ -22,12 +21,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-
-    @Transactional
-    public UserResponseDTO create(UserRequestDTO userRequestDTO){
-        User savedUser = userRepository.save(userMapper.dtoToUser(userRequestDTO));
-        return userMapper.toResponse(savedUser);
-    }
 
     @Transactional
     public String delete(Long id){
