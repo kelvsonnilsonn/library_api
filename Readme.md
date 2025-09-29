@@ -6,21 +6,25 @@ Desenvolvida em Spring Boot, a arquitetura do projeto prioriza a segurança, a m
 
 ## ⚙️ Tecnologias Utilizadas
 ### Tecnologia	        Versão/Propósito
--   Java	                JDK 21 
--   Spring Boot	.           3.5.6
--   ORM	Spring Data      JPA / Hibernate
--   Banco de Dados	  `MySQL` (Com mysql-connector-j)
--   Documentação	`springdoc-openapi-starter-webmvc-ui` (Swagger UI)
--   Utilidades	        `Lombok`, Spring DevTools
+-   Java	                JDK 21
+-   Spring Boot	        3.5.6
+-   ORM	                Spring Data JPA / Hibernate
+-   Banco de Dados	    `MySQL` (Com mysql-connector-j)
+-   Documentação	    `springdoc-openapi-starter-webmvc-ui` (Swagger UI)
+-   Segurança	        `Spring Security` + `Java JWT` (Auth0)
+-   Utilidades	        `Lombok`, Spring DevTools, `MapStruct`
 
 ---
 
 ## 🏗️ Arquitetura e Estrutura do Projeto
 ### 📁 Estrutura de Pacotes
 ```text
-src/main/java/com/library/api/
+src/main/java/com/library/
 ├── controller/          # Interfaces e implementações dos controllers
 ├── dto/                # Data Transfer Objects (Request/Response)
+│   ├── auth/           # DTOs de autenticação
+│   ├── books/          # DTOs de livros
+│   └── users/          # DTOs de usuários
 ├── model/              # Entidades JPA e objetos de valor
 ├── service/            # Lógica de negócio
 ├── repository/         # Interfaces de acesso a dados
@@ -28,6 +32,7 @@ src/main/java/com/library/api/
 ├── exception/          # Exceções personalizadas
 ├── handler/            # Tratamento global de exceções
 ├── enums/              # Enumerações do sistema
+├── security/           # Configurações de segurança e JWT
 └── util/               # Constantes e utilitários
 ```
 ### 🔷 Padrões Arquiteturais Implementados
@@ -68,6 +73,49 @@ public class ISBN {
 
 ---
 
+## 🔐 Sistema de Autenticação JWT
+
+### 🛡️ Configuração de Segurança
+- **Spring Security** com filtro JWT personalizado
+- **BCrypt** para hash de senhas
+- **Stateless** sessions para melhor escalabilidade
+- Proteção contra CSRF desabilitada (API REST)
+
+### 🔑 Fluxo de Autenticação
+- Login: `POST /auth/login`
+```JSON
+{
+    "username": "joao.silva",
+    "password": "senha123"
+}
+```
+
+- Registro: `POST /auth/register`
+```JSON
+{
+    "username": "maria.silva",
+    "password": "novaSenha123"
+}
+
+```
+
+- Resposta: 
+
+```JSON
+{
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "username":"joao.silva"
+}
+```
+
+### 🎫 Token JWT
+- Validade: 2 horas
+- Algoritmo: HMAC256
+- Claims: issuer ("library"), subject (username)
+- Autenticação: Header Authorization: Bearer {token}
+
+---
+
 ## ✨ Evolução e Padrões Avançados
 
 O projeto passou por refatorações estratégicas para garantir **performance, consistência de dados** e **aderência total** aos princípios RESTful e SOLID.
@@ -89,7 +137,7 @@ O código manual de mapeamento de objetos foi substituído pela biblioteca **Map
 Os *endpoints* foram refatorados para máxima aderência REST.
 
 - **URIs:** Remoção de **verbos de ação** nas URIs (e.g., `/create` ou `/delete`).
-- **Identificadores:** Uso de **`@PathVariable`** para identificadores de recurso (ID e ISBN), conforme a convenção REST (ex: `/api/livros/{id}`).
+- **Identificadores:** Uso de **`@PathVariable`** para identificadores de recurso (ID e ISBN), conforme a convenção REST (ex: `/livros/{id}`).
 
 ### 🛡️ Gerenciamento Global de Exceções
 O `GlobalExceptionHandler` foi reforçado para garantir um contrato claro com o cliente da API.
@@ -114,6 +162,9 @@ spring.datasource.url=jdbc:mysql://localhost:3306/library_db?allowPublicKeyRetri
 spring.datasource.username=root
 spring.datasource.password=sua_senha
 spring.jpa.hibernate.ddl-auto=update
+
+# Configuração de Segurança
+api.security.token.secret=sua-chave-secreta-jwt-aqui
 ```
 
 #### 2. Execução
@@ -125,28 +176,38 @@ mvn spring-boot:run
 ## 📖 Endpoints da API
 **Nota:** A API segue o padrão RESTful, usando o **Método HTTP** para indicar a operação e os **`{id}`** ou **`{isbn}`** como variáveis de caminho (Path Variables).
 
-### 📚 Gestão de Livros
+### 🔐 Autenticação (Público)
 | Método | Endpoint | Descrição | Códigos de Resposta |
 | :--- | :--- | :--- | :--- |
-| **POST** | `/api/livros` | Criar novo livro | 201, 400, 409, 500 |
-| **GET** | `/api/livros/{id}` | Buscar livro por ID | 200, 404, 500 |
-| **GET** | `/api/livros/isbn/{isbn}` | Buscar livro por ISBN | 200, 404, 500 |
-| **DELETE** | `/api/livros/{id}` | Deletar livro | 200, 404, 500 |
-| **GET** | `/api/livros` | Listar livros (Resposta Paginada) | 200, 500 |
+| **POST** | `/auth/login` | Autenticar usuário | 200, 400, 401 |
+| **POST** | `/auth/register` | Registrar novo usuário | 200, 400, 409 |
 
-### 👥 Gestão de Usuários
+### 📚 Gestão de Livros (Protegido)
 | Método | Endpoint | Descrição | Códigos de Resposta |
 | :--- | :--- | :--- | :--- |
-| **POST** | `/api/users` | Criar novo usuário | 201, 400, 409, 500 |
-| **GET** | `/api/users/{id}` | Buscar usuário por ID | 200, 404, 500 |
-| **DELETE** | `/api/users/{id}` | Deletar usuário | 200, 404, 500 |
+| **POST** | `/livros` | Criar novo livro | 201, 400, 409, 500 |
+| **GET** | `/livros/{id}` | Buscar livro por ID | 200, 404, 500 |
+| **GET** | `/livros/isbn/{isbn}` | Buscar livro por ISBN | 200, 404, 500 |
+| **DELETE** | `/livros/{id}` | Deletar livro | 200, 404, 500 |
+| **GET** | `/livros` | Listar livros (Resposta Paginada) | 200, 500 |
+
+### 👥 Gestão de Usuários (Protegido)
+| Método     | Endpoint | Descrição             | Códigos de Resposta |
+|:-----------| :--- |:----------------------|:--------------------|
+| **GET**    | `/users` | Listagem paginada     | 200, 500            |
+| **GET**    | `/users/{id}` | Buscar usuário por ID | 200, 404, 500       |
+| **DELETE** | `/users/{id}` | Deletar usuário       | 200, 404, 500       |
 ---
 
 ## 🎯 Funcionalidades Principais
+
 ### 🔐 Segurança de Dados
 - Password Validation: Validação de senha com mínimo de 3 caracteres
 - ISBN Validation: Validação de ISBN de 13 dígitos
 - DTO Seguros: Dados sensíveis não são expostos nas respostas
+- Autenticação JWT com tokens de 2 horas
+- Password Hashing com BCrypt
+- Proteção de Rotas: Todas as rotas (exceto auth) requerem autenticação
 
 ### 📊 Tipos de Livros Suportados
 ```java
@@ -194,8 +255,6 @@ public class BookMapper {
 ```java
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    User dtoToUser(UserRequestDTO dto);
-    
     UserResponseDTO toResponse(User user);
 }
 ```
@@ -206,9 +265,18 @@ public interface UserMapper {
 ### AppConstants
 ```java
 public class AppConstants {
-    public static final String BOOK_BASE_PATH = "/api/livros";
-    public static final String USER_BASE_PATH = "/api/users";
+    // =========== PATHS =========== //
+    public static final String BOOK_BASE_PATH = "/livros";
+    public static final String USER_BASE_PATH = "/users";
+    public static final String AUTH_BASE_PATH = "/auth";
+    public static final String LOGIN_PATH = "/login";
+    public static final String REGISTER_PATH = "/register";
+    public static final String ID_PATH = "/{id}";
+    public static final String SEARCH_ISBN_PATH = "/isbn/{isbn}";
+
+    // =========== MENSAGENS =========== //
     public static final String BOOK_NOT_FOUND_MESSAGE = "O livro não foi encontrado";
+    public static final String USER_DELETED_MSG = "Usuário '%s' deletado com sucesso";
     // ... mais constantes
 }
 ```
@@ -229,22 +297,76 @@ public class HttpConstants {
 Acesse a documentação Swagger UI após executar a aplicação:
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - API Docs: http://localhost:8080/api-docs
+**Nota:** A documentação Swagger agora requer autenticação via JWT para acessar os endpoints protegidos.
 
 ## 💡 Exemplos de Uso
-- Criar Usuário `POST /api/users`
+- Criar Usuário `POST /auth/register`
 ```json
 {
     "username": "joao.silva",
     "password": "senha123"
 }
 ```
-- Criar Livro `POST /api/livros/`
-```json
+
+- Login e pegar token: `POST /auth/login`
+
+```bash
+POST /auth/login
+Content-Type: application/json
+
+{
+    "username": "joao.silva", 
+    "password": "senha123"
+}
+
+# Resposta:
+{
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "username": "joao.silva"
+}
+```
+
+- Criar Livro `POST /livros/`
+- Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (Token)
+```bash
+POST /livros
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Content-Type: application/json
+
 {
     "title": "Dom Casmurro",
-    "isbn": "1234567891012",
+    "isbn": "1234567891012", 
     "authorId": 1,
     "type": "ROMANCE"
 }
-
 ```
+
+## 🔄 Mudanças Principais na Versão 1.4
+
+### ✅ Adicionado
+- **Sistema de autenticação JWT**
+- **Spring Security** com configurações personalizadas
+- **BCrypt** para hash de senhas
+- **Endpoints de login e registro**
+- **Filtro de segurança JWT**
+- **Proteção de rotas** (todas as rotas exceto auth requerem autenticação)
+
+### 🔄 Modificado
+- **UserService** removido método `create` (registro via auth)
+- **UserMapper** simplificado sem UserRequestDTO
+- **DTOs reorganizados** em subpacotes (auth, books, users)
+- **UserRepository** adicionado método `findByUsername`
+
+### 🗑️ Removido
+- **Criação de usuário** via UserController (agora apenas via /auth/register)
+
+---
+
+## 🛡️ Considerações de Segurança
+
+- **Tokens JWT** têm validade de 2 horas
+- **Senhas** são armazenadas com hash BCrypt
+- **CSRF protection** desabilitada para APIs REST stateless
+- **Todas as rotas** (exceto auth) requerem autenticação
+- **Validação robusta** de dados de entrada
+- **Tratamento adequado** de exceções sem vazamento de informações
