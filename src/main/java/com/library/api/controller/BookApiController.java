@@ -2,9 +2,11 @@ package com.library.api.controller;
 
 import com.library.api.dto.BookRequestDTO;
 import com.library.api.dto.BookResponseDTO;
+import com.library.api.dto.PageResponseDTO;
 import com.library.api.service.BookService;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,5 +42,11 @@ public class BookApiController implements BookAPI{
     public ResponseEntity<BookResponseDTO> findByIsbn(@PathVariable String isbn) {
         BookResponseDTO response = bookService.findByIsbn(isbn);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<PageResponseDTO<BookResponseDTO>> findAll(Pageable pageable){
+        PageResponseDTO<BookResponseDTO> books = bookService.findAll(pageable);
+        return ResponseEntity.ok(books);
     }
 }
