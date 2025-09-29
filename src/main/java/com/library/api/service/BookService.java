@@ -2,6 +2,7 @@ package com.library.api.service;
 
 import com.library.api.dto.BookRequestDTO;
 import com.library.api.dto.BookResponseDTO;
+import com.library.api.dto.PageResponseDTO;
 import com.library.api.exception.BookNotFoundException;
 import com.library.api.mapper.BookMapper;
 import com.library.api.model.Book;
@@ -9,6 +10,8 @@ import com.library.api.model.User;
 import com.library.api.repository.BookRepository;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +42,12 @@ public class BookService {
     public BookResponseDTO findById(Long id){
         Book book = findEntityById(id);
         return BookMapper.toResponse(book);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<BookResponseDTO> findAll(Pageable pageable){
+        Page<BookResponseDTO> books = bookRepository.findAll(pageable).map(BookMapper::toResponse);
+        return PageResponseDTO.fromPage(books);
     }
 
     @Transactional(readOnly = true)
