@@ -1,7 +1,7 @@
 package com.library.api.controller;
 
-import com.library.api.dto.BookRequestDTO;
-import com.library.api.dto.BookResponseDTO;
+import com.library.api.dto.books.BookRequestDTO;
+import com.library.api.dto.books.BookResponseDTO;
 import com.library.api.dto.PageResponseDTO;
 import com.library.api.service.BookService;
 import com.library.api.util.AppConstants;
