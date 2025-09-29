@@ -1,5 +1,6 @@
 package com.library.api.service;
 
+import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.UserRequestDTO;
 import com.library.api.dto.UserResponseDTO;
 import com.library.api.mapper.UserMapper;
@@ -8,6 +9,8 @@ import com.library.api.repository.UserRepository;
 import com.library.api.util.AppConstants;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +40,12 @@ public class UserService {
     public UserResponseDTO findById(Long id){
         User user = findEntityById(id);
         return userMapper.toResponse(user);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<UserResponseDTO> findAll(Pageable pageable){
+        Page<UserResponseDTO> users = userRepository.findAll(pageable).map(userMapper::toResponse);
+        return PageResponseDTO.fromPage(users);
     }
 
     @Transactional(readOnly = true)
