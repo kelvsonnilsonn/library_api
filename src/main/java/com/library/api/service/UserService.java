@@ -7,14 +7,13 @@ import com.library.api.mapper.UserMapper;
 import com.library.api.model.User;
 import com.library.api.repository.UserRepository;
 import com.library.api.util.AppConstants;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// V 1.4
+// V 1.5
 
 @Service
 @RequiredArgsConstructor
