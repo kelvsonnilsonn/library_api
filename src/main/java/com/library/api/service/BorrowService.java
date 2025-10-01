@@ -1,0 +1,55 @@
+package com.library.api.service;
+
+import com.library.api.dto.borrow.BorrowRequestDTO;
+import com.library.api.dto.borrow.BorrowResponseDTO;
+import com.library.api.exception.BookAlreadyBorrowedException;
+import com.library.api.exception.BorrowNotFoundException;
+import com.library.api.mapper.BorrowMapper;
+import com.library.api.model.Book;
+import com.library.api.model.Borrow;
+import com.library.api.model.User;
+import com.library.api.repository.BorrowRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+
+@Service
+@RequiredArgsConstructor
+public class BorrowService {
+
+    private final BorrowRepository borrowRepository;
+    private final BookService bookService;
+    private final BorrowMapper borrowMapper;
+    private final AuthenticationInformation authenticationInformation;
+
+    @Transactional
+    public BorrowResponseDTO borrowBook (BorrowRequestDTO borrowDTO){
+
+        User user = authenticationInformation.getAuthenticatedUser();
+        Book book = bookService.findEntityById(borrowDTO.bookId());
+
+        if(borrowRepository.existsByBookAndReturnDateIsNull(book)){
+            throw new BookAlreadyBorrowedException();
+        }
+
+        Borrow bookToBorrow = new Borrow(user, book, borrowDTO.dueDate());
+        Borrow savedBorrow = borrowRepository.save(bookToBorrow);
+
+        return borrowMapper.toResponse(savedBorrow);
+    }
+
+    @Transactional
+    public BorrowResponseDTO returnBook(Long bookId){
+        User user = authenticationInformation.getAuthenticatedUser();
+
+        Borrow borrowedBook = borrowRepository.findByBookIdAndUserAndReturnDateIsNull(bookId, user)
+                .orElseThrow(BorrowNotFoundException::new);
+
+        borrowedBook.setReturnDate(LocalDateTime.now());
+        Borrow updatedBorrow = borrowRepository.save(borrowedBook);
+
+        return borrowMapper.toResponse(updatedBorrow);
+    }
+}
