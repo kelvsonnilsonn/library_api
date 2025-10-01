@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import java.util.List;
 
 public record PageResponseDTO <T>(
-    List<T> users,
+    List<T> content,
     int actualPage,
     int totalPages,
     long totalItems,
