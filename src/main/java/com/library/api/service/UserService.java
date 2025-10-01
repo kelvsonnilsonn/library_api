@@ -2,6 +2,7 @@ package com.library.api.service;
 
 import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.UserResponseDTO;
+import com.library.api.exception.UserNotFoundException;
 import com.library.api.mapper.UserMapper;
 import com.library.api.model.User;
 import com.library.api.repository.UserRepository;
@@ -43,6 +44,6 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User findEntityById(Long id){
-        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 }
