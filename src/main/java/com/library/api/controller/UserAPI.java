@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name="Usuários", description = "Gestão de usuários")
 public interface UserAPI {
@@ -29,4 +30,10 @@ public interface UserAPI {
     @ApiResponse(responseCode = HttpConstants.OK, description = "usuários listados com sucesso")
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
     ResponseEntity<PageResponseDTO<UserResponseDTO>> findAll(Pageable pageable);
+
+    @Operation(summary="Procurar usuário por nome", description = "Procura um usuário pelo nome")
+    @ApiResponse(responseCode = HttpConstants.OK, description = "Usuário encontrado com sucesso")
+    @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = HttpConstants.NOT_FOUND_MSG)
+    @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
+    ResponseEntity<UserResponseDTO> findByUsername(@RequestParam String name);
 }
