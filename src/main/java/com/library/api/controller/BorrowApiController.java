@@ -29,6 +29,10 @@ public class BorrowApiController implements BorrowAPI {
 
     @GetMapping
     public ResponseEntity<PageResponseDTO<BorrowResponseDTO>> findAllMyBorrows(Pageable pageable){
-        return ResponseEntity.ok(borrowService.findAllMyBorrows(pageable));
+        PageResponseDTO<BorrowResponseDTO> borrows = borrowService.findAllMyBorrows(pageable);
+        if(borrows.content().isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(borrows);
     }
 }
