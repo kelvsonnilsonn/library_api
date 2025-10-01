@@ -3,8 +3,6 @@ package com.library.api.controller;
 import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.books.BookRequestDTO;
 import com.library.api.dto.books.BookResponseDTO;
-import com.library.api.enums.BookType;
-import com.library.api.model.Book;
 import com.library.api.service.BookService;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +47,12 @@ public class BookApiController implements BookAPI{
     @GetMapping
     public ResponseEntity<PageResponseDTO<BookResponseDTO>> findAll(Pageable pageable){
         PageResponseDTO<BookResponseDTO> books = bookService.findAll(pageable);
+        return verifyingContent(books);
+    }
+
+    @GetMapping(AppConstants.SEARCH_AVAILABLE_PATH)
+    public ResponseEntity<PageResponseDTO<BookResponseDTO>> findAvailableBooks(Pageable pageable){
+        PageResponseDTO<BookResponseDTO> books = bookService.findAvailableBooks(pageable);
         return verifyingContent(books);
     }
 
