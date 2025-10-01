@@ -20,12 +20,13 @@ public interface UserAPI {
     ResponseEntity<String> delete(@PathVariable Long id);
 
     @Operation(summary = "Procurar um usuário", description = "Procura um usuário")
-    @ApiResponse(responseCode = HttpConstants.CREATED, description = "Usuário encontrado com sucesso")
+    @ApiResponse(responseCode = HttpConstants.OK, description = "Usuário encontrado com sucesso")
     @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = HttpConstants.NOT_FOUND_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
     ResponseEntity<UserResponseDTO> findById(@PathVariable Long id);
 
     @Operation(summary = "Listar usuários", description = "Lista todos os usuários")
+    @ApiResponse(responseCode = HttpConstants.OK, description = "usuários listados com sucesso")
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
     ResponseEntity<PageResponseDTO<UserResponseDTO>> findAll(Pageable pageable);
 }
