@@ -37,6 +37,12 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
+    public UserResponseDTO findByUsername(String username){
+        User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
+        return userMapper.toResponse(user);
+    }
+
+    @Transactional(readOnly = true)
     public PageResponseDTO<UserResponseDTO> findAll(Pageable pageable){
         Page<UserResponseDTO> users = userRepository.findAll(pageable).map(userMapper::toResponse);
         return PageResponseDTO.fromPage(users);
