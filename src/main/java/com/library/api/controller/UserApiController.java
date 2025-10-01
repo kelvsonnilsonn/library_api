@@ -6,6 +6,7 @@ import com.library.api.service.UserService;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +28,12 @@ public class UserApiController implements UserAPI{
     @GetMapping(AppConstants.ID_PATH)
     public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
         UserResponseDTO dto = userService.findById(id);
+        return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping(AppConstants.SEARCH_NAME_PATH)
+    public ResponseEntity<UserResponseDTO> findByUsername(@RequestParam String name){
+        UserResponseDTO dto = userService.findByUsername(name);
         return ResponseEntity.ok(dto);
     }
 
