@@ -1,9 +1,6 @@
 package com.library.api.handler;
 
-import com.library.api.exception.BookNotFoundException;
-import com.library.api.exception.InvalidCreatePasswordException;
-import com.library.api.exception.InvalidISBNException;
-import com.library.api.exception.UserNotFoundException;
+import com.library.api.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,4 +28,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleBookNotFound(BookNotFoundException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
     }
+
+    @ExceptionHandler(BorrowNotFoundException.class)
+    public ResponseEntity<String> handleBorrowNotFound(BorrowNotFoundException e){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    }
+
+    @ExceptionHandler(BookAlreadyBorrowedException.class)
+    public ResponseEntity<String> handleBookAlreadyBorrowed(BookAlreadyBorrowedException e){
+        return ResponseEntity.status(HttpStatus.LOCKED).body(e.getMessage());
+    }
+
 }
