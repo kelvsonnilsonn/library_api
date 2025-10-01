@@ -5,12 +5,12 @@ import com.library.api.dto.borrow.BorrowResponseDTO;
 import com.library.api.util.HttpConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.mapstruct.Mapper;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@Mapper(componentModel = "spring")
+@Tag(name = "Empréstimos", description = "Operações de empréstimo e devolução")
 public interface BorrowAPI {
 
     @Operation(summary = "Realizar empréstimo", description = "Realiza um empréstimo")
