@@ -28,7 +28,6 @@ public class Book {
     private User author;
 
     private LocalDateTime createdAt;
-    private boolean isBorrowed;
 
     @Enumerated(EnumType.STRING)
     private BookType type;
@@ -39,7 +38,6 @@ public class Book {
         this.isbn = isbn;
         this.title = title;
         this.createdAt = LocalDateTime.now();
-        this.isBorrowed = false;
     }
 
     public Long getAuthorId(){
