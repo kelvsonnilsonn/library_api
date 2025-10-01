@@ -3,6 +3,7 @@ package com.library.api.controller;
 import com.library.api.dto.auth.LoginRequestDTO;
 import com.library.api.dto.auth.AuthResponseDTO;
 import com.library.api.dto.auth.RegisterRequestDTO;
+import com.library.api.exception.UserNotFoundException;
 import com.library.api.model.Password;
 import com.library.api.model.User;
 import com.library.api.repository.UserRepository;
@@ -29,7 +30,7 @@ public class AuthApiController implements AuthAPI {
 
     @PostMapping(AppConstants.LOGIN_PATH)
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO body){
-        User user = this.userRepository.findByUsername(body.username()).orElseThrow(() -> new RuntimeException("User não encontrado"));
+        User user = this.userRepository.findByUsername(body.username()).orElseThrow(UserNotFoundException::new);
         if(passwordEncoder.matches(body.password().getPassword(), user.getPassword())){
             String token = this.tokenService.generateToken(user);
             return ResponseEntity.ok(new AuthResponseDTO(token, user.getUsername()));
