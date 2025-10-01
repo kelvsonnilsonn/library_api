@@ -16,7 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// V1.2
+// V1.4
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +67,12 @@ public class BookService {
     public PageResponseDTO<BookResponseDTO> findByType(Pageable pageable, String type){
         BookType bookType = BookType.valueOf(type.toUpperCase());
         Page<BookResponseDTO> books = bookRepository.findByType(pageable, bookType).map(BookMapper::toResponse);
+        return PageResponseDTO.fromPage(books);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<BookResponseDTO> findAvailableBooks(Pageable pageable){
+        Page<BookResponseDTO> books = bookRepository.findAvailableBooks(pageable).map(BookMapper::toResponse);
         return PageResponseDTO.fromPage(books);
     }
 
