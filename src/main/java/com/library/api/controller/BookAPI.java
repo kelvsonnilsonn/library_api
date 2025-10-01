@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Livros", description = "Gestão de livros")
 public interface BookAPI {
@@ -42,6 +43,20 @@ public interface BookAPI {
 
     @Operation(summary = "Listar livros", description = "Lista todos os livros")
     @ApiResponse(responseCode = HttpConstants.OK, description = "Livros listados com sucesso")
+    @ApiResponse(responseCode = HttpConstants.NO_CONTENT, description = HttpConstants.NO_CONTENT_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
     ResponseEntity<PageResponseDTO<BookResponseDTO>> findAll(Pageable pageable);
+
+    @Operation(summary = "Listar por tipo", description = "Litar todos os livros de um tipo")
+    @ApiResponse(responseCode = HttpConstants.OK, description = "Livros de um tipo listado com sucesso")
+    @ApiResponse(responseCode = HttpConstants.NO_CONTENT, description = HttpConstants.NO_CONTENT_MSG)
+    @ApiResponse(responseCode =  HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
+    ResponseEntity<PageResponseDTO<BookResponseDTO>> findByType(Pageable pageable, @RequestParam String type);
+
+    @Operation(summary = "Listar por titulo", description = "Litar todos os livros com um mesmo título")
+    @ApiResponse(responseCode = HttpConstants.OK, description = "Livros listado com sucesso")
+    @ApiResponse(responseCode = HttpConstants.NO_CONTENT, description = HttpConstants.NO_CONTENT_MSG)
+    @ApiResponse(responseCode =  HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
+    ResponseEntity<PageResponseDTO<BookResponseDTO>> findByTitle(Pageable pageable, @RequestParam String title);
+
 }
