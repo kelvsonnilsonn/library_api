@@ -3,6 +3,7 @@ package com.library.api.service;
 import com.library.api.dto.books.BookRequestDTO;
 import com.library.api.dto.books.BookResponseDTO;
 import com.library.api.dto.PageResponseDTO;
+import com.library.api.enums.BookType;
 import com.library.api.exception.BookNotFoundException;
 import com.library.api.mapper.BookMapper;
 import com.library.api.model.Book;
@@ -54,6 +55,19 @@ public class BookService {
     public BookResponseDTO findByIsbn(String isbn){
         Book book = bookRepository.findByIsbn(isbn).orElseThrow(BookNotFoundException::new);
         return BookMapper.toResponse(book);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<BookResponseDTO> findByTitle(Pageable pageable, String title){
+        Page<BookResponseDTO> books = bookRepository.findByTitle(pageable, title).map(BookMapper::toResponse);
+        return PageResponseDTO.fromPage(books);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<BookResponseDTO> findByType(Pageable pageable, String type){
+        BookType bookType = BookType.valueOf(type.toUpperCase());
+        Page<BookResponseDTO> books = bookRepository.findByType(pageable, bookType).map(BookMapper::toResponse);
+        return PageResponseDTO.fromPage(books);
     }
 
     @Transactional(readOnly = true)
