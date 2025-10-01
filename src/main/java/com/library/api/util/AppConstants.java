@@ -9,6 +9,8 @@ public class AppConstants {
     public static final String BOOK_BASE_PATH = "/livros";
     public static final String ID_PATH = "/{id}";
     public static final String SEARCH_ISBN_PATH = "/isbn/{isbn}";
+    public static final String SEARCH_TITLE_PATH = "/titulo";
+    public static final String SEARCH_TYPE_PATH = "/tipo";
 
     public static final String USER_BASE_PATH = "/users";
 
