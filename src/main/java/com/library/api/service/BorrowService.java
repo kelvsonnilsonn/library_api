@@ -1,5 +1,6 @@
 package com.library.api.service;
 
+import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.borrow.BorrowRequestDTO;
 import com.library.api.dto.borrow.BorrowResponseDTO;
 import com.library.api.exception.BookAlreadyBorrowedException;
@@ -10,10 +11,14 @@ import com.library.api.model.Borrow;
 import com.library.api.model.User;
 import com.library.api.repository.BorrowRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+
+// V1.2
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +56,12 @@ public class BorrowService {
         Borrow updatedBorrow = borrowRepository.save(borrowedBook);
 
         return borrowMapper.toResponse(updatedBorrow);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<BorrowResponseDTO> findAllMyBorrows(Pageable pageable){
+        Page<Borrow> borrows = borrowRepository.findByUserAndReturnDateIsNull(pageable, authenticationInformation.getAuthenticatedUser());
+        Page<BorrowResponseDTO> page = borrows.map(borrowMapper::toResponse);
+        return PageResponseDTO.fromPage(page);
     }
 }
