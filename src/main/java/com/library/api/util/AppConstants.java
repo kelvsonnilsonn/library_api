@@ -14,6 +14,7 @@ public class AppConstants {
     public static final String SEARCH_AVAILABLE_PATH = "/disponivel";
 
     public static final String USER_BASE_PATH = "/users";
+    public static final String SEARCH_NAME_PATH = "/nome";
 
     public static final String AUTH_BASE_PATH = "/auth";
     public static final String LOGIN_PATH = "/login";
