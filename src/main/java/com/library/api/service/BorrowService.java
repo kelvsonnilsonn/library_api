@@ -64,4 +64,11 @@ public class BorrowService {
         Page<BorrowResponseDTO> page = borrows.map(borrowMapper::toResponse);
         return PageResponseDTO.fromPage(page);
     }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<BorrowResponseDTO> findOverdueBorrows(Pageable pageable){
+        Page<Borrow> borrows = borrowRepository.findOverdueByUser(pageable, authenticationInformation.getAuthenticatedUser(), LocalDateTime.now());
+        Page<BorrowResponseDTO> page = borrows.map(borrowMapper::toResponse);
+        return PageResponseDTO.fromPage(page);
+    }
 }
