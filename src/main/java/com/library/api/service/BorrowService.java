@@ -71,4 +71,10 @@ public class BorrowService {
         Page<BorrowResponseDTO> page = borrows.map(borrowMapper::toResponse);
         return PageResponseDTO.fromPage(page);
     }
+
+    @Transactional(readOnly = true)
+    public PageResponseDTO<BorrowResponseDTO> getUserBorrowHistory(Pageable pageable){
+        Page<BorrowResponseDTO> page = borrowRepository.getUserBorrowHistory(pageable, authenticationInformation.getAuthenticatedUser()).map(borrowMapper::toResponse);
+        return PageResponseDTO.fromPage(page);
+    }
 }
