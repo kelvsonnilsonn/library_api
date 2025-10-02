@@ -11,14 +11,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-// V1.4
-
 @RestController
 @RequestMapping(AppConstants.BOOK_BASE_PATH)
 @RequiredArgsConstructor
 public class BookApiController implements BookAPI{
 
     private final BookService bookService;
+    private final ContentVerifier<BookResponseDTO> contentVerifier;
 
     @PostMapping
     public ResponseEntity<BookResponseDTO> create(@RequestBody BookRequestDTO bookRequestDTO){
@@ -47,31 +46,24 @@ public class BookApiController implements BookAPI{
     @GetMapping
     public ResponseEntity<PageResponseDTO<BookResponseDTO>> findAll(Pageable pageable){
         PageResponseDTO<BookResponseDTO> books = bookService.findAll(pageable);
-        return verifyingContent(books);
+        return contentVerifier.verifyingContent(books);
     }
 
     @GetMapping(AppConstants.SEARCH_AVAILABLE_PATH)
     public ResponseEntity<PageResponseDTO<BookResponseDTO>> findAvailableBooks(Pageable pageable){
         PageResponseDTO<BookResponseDTO> books = bookService.findAvailableBooks(pageable);
-        return verifyingContent(books);
+        return contentVerifier.verifyingContent(books);
     }
 
     @GetMapping(AppConstants.SEARCH_TITLE_PATH)
     public ResponseEntity<PageResponseDTO<BookResponseDTO>> findByTitle(Pageable pageable, @RequestParam String title){
         PageResponseDTO<BookResponseDTO> books = bookService.findByTitle(pageable, title);
-        return verifyingContent(books);
+        return contentVerifier.verifyingContent(books);
     }
 
     @GetMapping(AppConstants.SEARCH_TYPE_PATH)
     public ResponseEntity<PageResponseDTO<BookResponseDTO>> findByType(Pageable pageable, @RequestParam String type){
         PageResponseDTO<BookResponseDTO> books = bookService.findByType(pageable, type);
-        return verifyingContent(books);
-    }
-
-    private ResponseEntity<PageResponseDTO<BookResponseDTO>> verifyingContent(PageResponseDTO<BookResponseDTO> books){
-        if(books.content().isEmpty()){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(books);
+        return contentVerifier.verifyingContent(books);
     }
 }
