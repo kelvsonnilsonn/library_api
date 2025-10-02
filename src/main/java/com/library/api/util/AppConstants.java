@@ -22,6 +22,7 @@ public class AppConstants {
 
     public static final String BORROW_BASE_PATH = "/borrow";
     public static final String DUE_PATH = "/atrasados";
+    public static final String HISTORY_PATH = "/historico";
 
 
     // =========== SYSTEM MESSAGES =========== //
