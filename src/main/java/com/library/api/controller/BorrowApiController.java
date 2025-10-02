@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class BorrowApiController implements BorrowAPI {
 
     private final BorrowService borrowService;
+    private final ContentVerifier<BorrowResponseDTO> contentVerifier;
 
     @PostMapping
     public ResponseEntity<BorrowResponseDTO> borrow(@RequestBody BorrowRequestDTO borrowRequestDTO){
@@ -30,9 +31,12 @@ public class BorrowApiController implements BorrowAPI {
     @GetMapping
     public ResponseEntity<PageResponseDTO<BorrowResponseDTO>> findAllMyBorrows(Pageable pageable){
         PageResponseDTO<BorrowResponseDTO> borrows = borrowService.findAllMyBorrows(pageable);
-        if(borrows.content().isEmpty()){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(borrows);
+        return contentVerifier.verifyingContent(borrows);
+    }
+
+    @GetMapping(AppConstants.DUE_PATH)
+    public ResponseEntity<PageResponseDTO<BorrowResponseDTO>> findOverdueBorrows(Pageable pageable){
+        PageResponseDTO<BorrowResponseDTO> borrows = borrowService.findOverdueBorrows(pageable);
+        return contentVerifier.verifyingContent(borrows);
     }
 }
