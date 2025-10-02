@@ -24,7 +24,7 @@ src/main/java/com/library/
 ├── dto/                # Data Transfer Objects (Request/Response)
 │   ├── auth/           # DTOs de autenticação
 │   ├── books/          # DTOs de livros
-│   └── users/          # DTOs de usuários
+│   └── borrow/         # DTOs de empréstimos
 ├── model/              # Entidades JPA e objetos de valor
 ├── service/            # Lógica de negócio
 ├── repository/         # Interfaces de acesso a dados
@@ -41,17 +41,59 @@ src/main/java/com/library/
 // Interface para documentação e contrato
 @Tag(name = "Livros", description = "Gestão de livros")
 public interface BookAPI {
-@Operation(summary = "Criar um livro", description = "Criar um novo livro")
-ResponseEntity<BookResponseDTO> create(@RequestBody BookRequestDTO bookRequestDTO);
+    @Operation(summary = "Criar um livro", description = "Criar um novo livro")
+    ResponseEntity<BookResponseDTO> create(@RequestBody BookRequestDTO bookRequestDTO);
+    //...
 }
-   ```
+
+@Tag(name = "Segurança", description = "Sistema de autenticação")
+public interface AuthAPI {
+    @Operation(summary = "Logar um usuário", description = "Loga de um usuário")
+    ResponseEntity<?> login(@RequestBody LoginRequestDTO body);
+    //...
+}
+
+@Tag(name = "Empréstimos", description = "Operações de empréstimo e devolução")
+public interface BorrowAPI {
+    @Operation(summary = "Realizar empréstimo", description = "Realiza um empréstimo")
+    ResponseEntity<BorrowResponseDTO> borrow(@RequestBody BorrowRequestDTO borrowRequestDTO);
+    //...
+}
+
+@Tag(name="Usuários", description = "Gestão de usuários")
+public interface UserAPI {
+    @Operation(summary = "Deletar um usuário", description = "Deleta um usuário")
+    ResponseEntity<String> delete(@PathVariable Long id);
+    //...
+}
+```
 
 ```java
-// Implementação do controller
 @RestController
 @RequestMapping(AppConstants.BOOK_BASE_PATH)
 public class BookController implements BookAPI {
-// Implementação dos métodos
+    // Implementação dos métodos
+}
+
+@RestController
+@RequestMapping(AppConstants.AUTH_BASE_PATH)
+@RequiredArgsConstructor
+public class AuthApiController implements AuthAPI {
+    //Implementação dos métodos
+}
+
+@RestController
+@RequestMapping(AppConstants.BORROW_BASE_PATH)
+@RequiredArgsConstructor
+public class BorrowApiController implements BorrowAPI {
+    //Implementação dos métodos
+}
+
+@RestController
+@RequestMapping(AppConstants.USER_BASE_PATH)
+@RequiredArgsConstructor
+public class UserApiController implements UserAPI{
+    //Implementação dos métodos
 }
 ```
 
@@ -133,6 +175,11 @@ O código manual de mapeamento de objetos foi substituído pela biblioteca **Map
 
 - **Benefício:** Mappers mais **limpos, legíveis** e com **menos chances de erro** e manutenção simplificada.
 
+### 🎯 Componente de Verificação de Conteúdo
+- **ContentVerifier**: Componente reutilizável para verificar conteúdo vazio
+- Retorna `204 No Content` quando listas estão vazias
+- Padroniza respostas em todos os endpoints de listagem
+
 ### 🌐 Conformidade REST (100% RESTful)
 Os *endpoints* foram refatorados para máxima aderência REST.
 
@@ -190,13 +237,26 @@ mvn spring-boot:run
 | **GET** | `/livros/isbn/{isbn}` | Buscar livro por ISBN | 200, 404, 500 |
 | **DELETE** | `/livros/{id}` | Deletar livro | 200, 404, 500 |
 | **GET** | `/livros` | Listar livros (Resposta Paginada) | 200, 500 |
+| **GET** | `/livros/titulo?title={titulo}` | Buscar livros por título | 200, 204, 500 |
+| **GET** | `/livros/tipo?type={tipo}` | Buscar livros por gênero | 200, 204, 500 |
+| **GET** | `/livros/disponivel` | Listar livros disponíveis | 200, 204, 500 |
 
 ### 👥 Gestão de Usuários (Protegido)
-| Método     | Endpoint | Descrição             | Códigos de Resposta |
-|:-----------| :--- |:----------------------|:--------------------|
-| **GET**    | `/users` | Listagem paginada     | 200, 500            |
-| **GET**    | `/users/{id}` | Buscar usuário por ID | 200, 404, 500       |
-| **DELETE** | `/users/{id}` | Deletar usuário       | 200, 404, 500       |
+| Método | Endpoint | Descrição | Códigos de Resposta |
+| :--- | :--- | :--- | :--- |
+| **GET** | `/users` | Listagem paginada | 200, 500 |
+| **GET** | `/users/{id}` | Buscar usuário por ID | 200, 404, 500 |
+| **DELETE** | `/users/{id}` | Deletar usuário | 200, 404, 500 |
+| **GET** | `/users/nome?name={username}` | Buscar usuário por username | 200, 404, 500 |
+
+### 📖 Gestão de Empréstimos (Protegido)
+| Método | Endpoint | Descrição | Códigos de Resposta |
+| :--- | :--- | :--- | :--- |
+| **POST** | `/borrow` | Realizar empréstimo | 200, 404, 500 |
+| **POST** | `/borrow/{id}` | Devolver livro | 200, 404, 500 |
+| **GET** | `/borrow` | Meus empréstimos ativos | 200, 204, 500 |
+| **GET** | `/borrow/atrasados` | Empréstimos em atraso | 200, 204, 500 |
+| **GET** | `/borrow/historico` | Histórico completo | 200, 204, 500 |
 ---
 
 ## 🎯 Funcionalidades Principais
@@ -269,10 +329,17 @@ public class AppConstants {
     public static final String BOOK_BASE_PATH = "/livros";
     public static final String USER_BASE_PATH = "/users";
     public static final String AUTH_BASE_PATH = "/auth";
+    public static final String BORROW_BASE_PATH = "/borrow";
     public static final String LOGIN_PATH = "/login";
     public static final String REGISTER_PATH = "/register";
     public static final String ID_PATH = "/{id}";
     public static final String SEARCH_ISBN_PATH = "/isbn/{isbn}";
+    public static final String SEARCH_TITLE_PATH = "/titulo";
+    public static final String SEARCH_TYPE_PATH = "/tipo";
+    public static final String SEARCH_AVAILABLE_PATH = "/disponivel";
+    public static final String SEARCH_NAME_PATH = "/nome";
+    public static final String DUE_PATH = "/atrasados";
+    public static final String HISTORY_PATH = "/historico";
 
     // =========== MENSAGENS =========== //
     public static final String BOOK_NOT_FOUND_MESSAGE = "O livro não foi encontrado";
@@ -299,67 +366,66 @@ Acesse a documentação Swagger UI após executar a aplicação:
 - API Docs: http://localhost:8080/api-docs
 **Nota:** A documentação Swagger agora requer autenticação via JWT para acessar os endpoints protegidos.
 
-## 💡 Exemplos de Uso
-- Criar Usuário `POST /auth/register`
-```json
-{
-    "username": "joao.silva",
-    "password": "senha123"
-}
-```
+### 💡 Novos Exemplos de Uso
 
-- Login e pegar token: `POST /auth/login`
-
+#### Empréstimos
 ```bash
-POST /auth/login
-Content-Type: application/json
-
+# Fazer empréstimo
+POST /borrow
+Authorization: Bearer {token}
 {
-    "username": "joao.silva", 
-    "password": "senha123"
+    "bookId": 1,
+    "dueDate": "2024-12-31T23:59:59"
 }
 
-# Resposta:
-{
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    "username": "joao.silva"
-}
+# Devolver livro
+POST /borrow/1/return
+Authorization: Bearer {token}
+
+# Ver meus empréstimos
+GET /borrow
+Authorization: Bearer {token}
+
+# Ver empréstimos atrasados
+GET /borrow/atrasados
+Authorization: Bearer {token}
 ```
 
-- Criar Livro `POST /livros/`
-- Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (Token)
+### 🔍 Exemplos de Busca
 ```bash
-POST /livros
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-Content-Type: application/json
+# Buscar livros por título
+GET /livros/titulo?title=senhor
 
-{
-    "title": "Dom Casmurro",
-    "isbn": "1234567891012", 
-    "authorId": 1,
-    "type": "ROMANCE"
-}
+# Buscar livros por gênero  
+GET /livros/tipo?type=romance
+
+# Listar livros disponíveis
+GET /livros/disponivel
+
+# Buscar usuário por username
+GET /users/nome?name=joao.silva
 ```
 
-## 🔄 Mudanças Principais na Versão 1.4
+## 🔄 Mudanças Principais (Versões 1.4 → 1.5)
 
-### ✅ Adicionado
-- **Sistema de autenticação JWT**
-- **Spring Security** com configurações personalizadas
-- **BCrypt** para hash de senhas
-- **Endpoints de login e registro**
-- **Filtro de segurança JWT**
-- **Proteção de rotas** (todas as rotas exceto auth requerem autenticação)
+### 🔍 Sistema de Buscas e Filtros
+- **Busca por título**: Filtro parcial case-insensitive
+- **Busca por gênero**: Conversão automática String → Enum
+- **Livros disponíveis**: Filtro inteligente por status
 
-### 🔄 Modificado
-- **UserService** removido método `create` (registro via auth)
-- **UserMapper** simplificado sem UserRequestDTO
-- **DTOs reorganizados** em subpacotes (auth, books, users)
-- **UserRepository** adicionado método `findByUsername`
+### 🎯 Componentes de Auxílio
+- **AuthenticationInformation**: Acesso centralizado ao usuário autenticado
 
-### 🗑️ Removido
-- **Criação de usuário** via UserController (agora apenas via /auth/register)
+#### ✅ Adicionado
+- **Sistema completo de empréstimos** (borrow, return, history)
+- **Buscas avançadas** em livros (título, tipo, disponibilidade)
+- **Busca de usuários** por username
+- **Componentes auxiliares** para autenticação e conteúdo
 
+#### 🎯 Aprimorado
+- **Padronização de respostas** HTTP (204 No Content)
+- **Experiência de API** com filtros intuitivos
+- **Segurança** com acesso contextual do usuário
 ---
 
 ## 🛡️ Considerações de Segurança
