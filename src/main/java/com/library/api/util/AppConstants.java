@@ -21,6 +21,7 @@ public class AppConstants {
     public static final String REGISTER_PATH = "/register";
 
     public static final String BORROW_BASE_PATH = "/borrow";
+    public static final String DUE_PATH = "/atrasados";
 
 
     // =========== SYSTEM MESSAGES =========== //
