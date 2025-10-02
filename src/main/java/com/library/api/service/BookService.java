@@ -1,8 +1,8 @@
 package com.library.api.service;
 
+import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.books.BookRequestDTO;
 import com.library.api.dto.books.BookResponseDTO;
-import com.library.api.dto.PageResponseDTO;
 import com.library.api.enums.BookType;
 import com.library.api.exception.BookNotFoundException;
 import com.library.api.mapper.BookMapper;
@@ -23,11 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookService {
 
     private final BookRepository bookRepository;
-    private final UserService userService;
+    private final AuthenticationInformation authenticationInformation;
 
     @Transactional
     public BookResponseDTO create(BookRequestDTO book){
-        User author = userService.findEntityById(book.authorId());
+        User author = authenticationInformation.getAuthenticatedUser();
         Book savedBook = bookRepository.save(BookMapper.dtoToBook(book, author));
         return BookMapper.toResponse(savedBook);
     }
