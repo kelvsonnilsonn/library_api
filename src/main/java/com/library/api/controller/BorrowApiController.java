@@ -34,6 +34,12 @@ public class BorrowApiController implements BorrowAPI {
         return contentVerifier.verifyingContent(borrows);
     }
 
+    @GetMapping(AppConstants.HISTORY_PATH)
+    public ResponseEntity<PageResponseDTO<BorrowResponseDTO>> getBorrowHistory(Pageable pageable){
+        PageResponseDTO<BorrowResponseDTO> borrows = borrowService.getUserBorrowHistory(pageable);
+        return contentVerifier.verifyingContent(borrows);
+    }
+
     @GetMapping(AppConstants.DUE_PATH)
     public ResponseEntity<PageResponseDTO<BorrowResponseDTO>> findOverdueBorrows(Pageable pageable){
         PageResponseDTO<BorrowResponseDTO> borrows = borrowService.findOverdueBorrows(pageable);
