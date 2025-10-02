@@ -19,4 +19,7 @@ public interface BorrowRepository extends JpaRepository<Borrow, Long> {
 
     @Query("SELECT b FROM Borrow b WHERE b.user = :user AND b.returnDate IS NULL AND b.dueDate < :currentDate")
     Page<Borrow> findOverdueByUser(Pageable pageable, User user, LocalDateTime currentDate);
+
+    @Query("SELECT b FROM Borrow b WHERE b.user = :user")
+    Page<Borrow> getUserBorrowHistory(Pageable pageable, User user);
 }
