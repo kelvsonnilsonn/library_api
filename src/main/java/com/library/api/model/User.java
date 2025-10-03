@@ -33,8 +33,8 @@ public class User {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void changePassword(String oPassword){
-        this.password = password.of(oPassword);
+    public void changePassword(Password oPassword){
+        this.password = oPassword;
     }
 
     public String getPassword(){
