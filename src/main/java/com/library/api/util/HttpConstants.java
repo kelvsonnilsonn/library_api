@@ -19,4 +19,5 @@ public class HttpConstants {
     public static final String INTERN_SERVER_ERROR_MSG = "Erro interno do servidor";
     public static final String NOT_FOUND_MSG = "Informação não encontrada";
     public static final String NO_CONTENT_MSG = "Não há conteúdo a ser mostrado";
+    public static final String CONFLICT_MSG = "Já está em uso";
 }
