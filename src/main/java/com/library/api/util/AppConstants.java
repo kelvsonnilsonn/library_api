@@ -30,6 +30,7 @@ public class AppConstants {
 
     public static final String USER_DELETED_MSG = "A conta %s foi deletada";
     public static final String BOOK_DELETED_MSG = "O livro %s foi deletado";
+    public static final String SUCCESS_PASSWORD_CHANGE_MSG = "A senha foi alterada";
 
     // =========== EXCEPTIONS MESSAGES =========== //
 
