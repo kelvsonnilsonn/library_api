@@ -228,6 +228,7 @@ mvn spring-boot:run
 | :--- | :--- | :--- | :--- |
 | **POST** | `/auth/login` | Autenticar usuário | 200, 400, 401 |
 | **POST** | `/auth/register` | Registrar novo usuário | 200, 400, 409 |
+| **PUT** | `/auth/password?password={novaSenha}` | Alterar senha do usuário logado | 200, 400, 409 |
 
 ### 📚 Gestão de Livros (Protegido)
 | Método | Endpoint | Descrição | Códigos de Resposta |
@@ -248,6 +249,7 @@ mvn spring-boot:run
 | **GET** | `/users/{id}` | Buscar usuário por ID | 200, 404, 500 |
 | **DELETE** | `/users/{id}` | Deletar usuário | 200, 404, 500 |
 | **GET** | `/users/nome?name={username}` | Buscar usuário por username | 200, 404, 500 |
+| **PUT** | `/users` | Atualizar nome do usuário logado | 200, 400, 409 |
 
 ### 📖 Gestão de Empréstimos (Protegido)
 | Método | Endpoint | Descrição | Códigos de Resposta |
@@ -340,10 +342,13 @@ public class AppConstants {
     public static final String SEARCH_NAME_PATH = "/nome";
     public static final String DUE_PATH = "/atrasados";
     public static final String HISTORY_PATH = "/historico";
+    public static final String CHANGE_PASSWORD_PATH = "/password";
 
     // =========== MENSAGENS =========== //
     public static final String BOOK_NOT_FOUND_MESSAGE = "O livro não foi encontrado";
     public static final String USER_DELETED_MSG = "Usuário '%s' deletado com sucesso";
+    public static final String SUCCESS_PASSWORD_CHANGE_MSG = "Senha alterada com sucesso";
+    
     // ... mais constantes
 }
 ```
@@ -426,6 +431,46 @@ GET /users/nome?name=joao.silva
 - **Padronização de respostas** HTTP (204 No Content)
 - **Experiência de API** com filtros intuitivos
 - **Segurança** com acesso contextual do usuário
+
+## 🔄 Mudanças Principais (Versões 1.5 → 1.6)
+
+### **4. 🆕 NOVAS EXCEÇÕES**
+```markdown
+### ⚡ Novas Exceções Personalizadas
+- **FailedLoginAttemptException** - Credenciais inválidas no login (401)
+- **UserAlreadyExistsException** - Usuário já existe no registro (409)  
+- **PasswordAlreadyInUseUpdateException** - Nova senha igual à atual (409)
+- **NameAlreadyInUseUpdateException** - Novo nome igual ao atual (409)
+```
+
+### 🔧 Novos Serviços Implementados
+- **SecurityService**: Serviço especializado para operações de autenticação
+    - `login()`: Autentica usuário com validação de credenciais
+    - `register()`: Registra novo usuário com verificação de duplicidade
+    - `update()`: Altera senha do usuário logado com validação de segurança
+
+### 🛡️ Aprimoramentos de Segurança
+- **Validação de senha atual**: Impede reutilização da mesma senha
+- **Verificação de duplicatas**: Username único no sistema
+- **Autenticação contextual**: Operações usam apenas usuário logado
+- **Tratamento granular de erros**: Exceções específicas para cada cenário
+
+### 💡 Novos Exemplos de Uso
+
+#### Autoatualização de Usuário
+```bash
+# Alterar nome de usuário
+PUT /users
+Authorization: Bearer {token}
+{
+    "newName": "novo_username"
+}
+
+# Alterar senha  
+PUT /auth/password?password=novaSenha123
+Authorization: Bearer {token}
+```
+
 ---
 
 ## 🛡️ Considerações de Segurança
