@@ -2,6 +2,8 @@ package com.library.api.service;
 
 import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.UserResponseDTO;
+import com.library.api.dto.UserUpdateDto;
+import com.library.api.exception.NameAlreadyInUseUpdateException;
 import com.library.api.exception.UserNotFoundException;
 import com.library.api.mapper.UserMapper;
 import com.library.api.model.User;
@@ -13,7 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// V 1.5
+// V 1.6
 
 @Service
 @RequiredArgsConstructor
@@ -21,12 +23,24 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final AuthenticationInformation authenticationInformation;
 
     @Transactional
     public String delete(Long id){
         User user = findEntityById(id);
         userRepository.deleteById(id);
         return String.format(AppConstants.USER_DELETED_MSG, user.getUsername());
+    }
+
+    @Transactional
+    public UserResponseDTO update(UserUpdateDto dto){
+        User user = authenticationInformation.getAuthenticatedUser();
+        if(dto.newName() != null && dto.newName().equals(user.getUsername())){
+            throw new NameAlreadyInUseUpdateException();
+        }
+        user.setUsername(dto.newName());
+        User savedUser = userRepository.save(user);
+        return userMapper.toResponse(savedUser);
     }
 
     @Transactional(readOnly = true)
