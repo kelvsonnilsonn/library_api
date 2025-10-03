@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,7 @@ public class User {
     private Long id;
 
     @Column(name = "username", unique = true, nullable = false)
+    @Setter
     private String username;
 
     @Embedded
