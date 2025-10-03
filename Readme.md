@@ -435,13 +435,11 @@ GET /users/nome?name=joao.silva
 ## 🔄 Mudanças Principais (Versões 1.5 → 1.6)
 
 ### **4. 🆕 NOVAS EXCEÇÕES**
-```markdown
 ### ⚡ Novas Exceções Personalizadas
 - **FailedLoginAttemptException** - Credenciais inválidas no login (401)
 - **UserAlreadyExistsException** - Usuário já existe no registro (409)  
 - **PasswordAlreadyInUseUpdateException** - Nova senha igual à atual (409)
 - **NameAlreadyInUseUpdateException** - Novo nome igual ao atual (409)
-```
 
 ### 🔧 Novos Serviços Implementados
 - **SecurityService**: Serviço especializado para operações de autenticação
