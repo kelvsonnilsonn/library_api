@@ -39,4 +39,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.LOCKED).body(e.getMessage());
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<String> handleUserAlreadyExists(UserAlreadyExistsException e){
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+    }
+
+    @ExceptionHandler(FailedLoginAttemptException.class)
+    public ResponseEntity<String> handleLoginAttemptFailed(FailedLoginAttemptException e){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    }
 }
