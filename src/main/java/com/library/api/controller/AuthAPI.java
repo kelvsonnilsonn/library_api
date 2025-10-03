@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name = "Segurança", description = "Sistema de autenticação")
 public interface AuthAPI {
@@ -21,5 +22,10 @@ public interface AuthAPI {
     @ApiResponse(responseCode = HttpConstants.CREATED, description = "Novo usuário criado com sucesso")
     @ApiResponse(responseCode = HttpConstants.BAD_REQUEST, description = HttpConstants.BAD_REQUEST_MSG)
     ResponseEntity<?> register(@RequestBody RegisterRequestDTO body);
+
+    @Operation(summary = "Alterar senha", description = "Altera senha de um usuário")
+    @ApiResponse(responseCode = HttpConstants.CREATED, description = "Senha alterada com sucesso.")
+    @ApiResponse(responseCode = HttpConstants.CONFLICT, description = HttpConstants.CONFLICT_MSG)
+    ResponseEntity<String> updatePassword(@RequestParam String password);
 
 }
