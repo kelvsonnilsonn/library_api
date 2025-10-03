@@ -19,6 +19,7 @@ public class AppConstants {
     public static final String AUTH_BASE_PATH = "/auth";
     public static final String LOGIN_PATH = "/login";
     public static final String REGISTER_PATH = "/register";
+    public static final String CHANGE_PASSWORD_PATH = "/new";
 
     public static final String BORROW_BASE_PATH = "/borrow";
     public static final String DUE_PATH = "/atrasados";
