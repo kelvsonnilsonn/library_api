@@ -2,11 +2,11 @@ package com.library.api.controller;
 
 import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.UserResponseDTO;
+import com.library.api.dto.UserUpdateDto;
 import com.library.api.service.UserService;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,5 +41,11 @@ public class UserApiController implements UserAPI{
     public ResponseEntity<PageResponseDTO<UserResponseDTO>> findAll(Pageable pageable){
         PageResponseDTO<UserResponseDTO> users = userService.findAll(pageable);
         return ResponseEntity.ok(users);
+    }
+
+    @PutMapping
+    public ResponseEntity<UserResponseDTO> updateName(@RequestBody UserUpdateDto updateDto){
+        UserResponseDTO user = userService.update(updateDto);
+        return ResponseEntity.ok(user);
     }
 }
