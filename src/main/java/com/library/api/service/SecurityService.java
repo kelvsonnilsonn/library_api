@@ -11,6 +11,7 @@ import com.library.api.model.Password;
 import com.library.api.model.User;
 import com.library.api.repository.UserRepository;
 import com.library.api.security.TokenService;
+import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -60,7 +61,7 @@ public class SecurityService {
         Password encodedPassword = Password.of(newPassword, passwordEncoder);
         user.changePassword(encodedPassword);
         userRepository.save(user);
-        return "Senha alterada com sucesso.";
+        return AppConstants.SUCCESS_PASSWORD_CHANGE_MSG;
     }
 
 }
