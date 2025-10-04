@@ -166,7 +166,7 @@ O projeto passou por refatorações estratégicas para garantir **performance, c
 A camada de Serviço (`service/`) utiliza a anotação **`@Transactional`** para garantir as propriedades **ACID** (Atomicidade, Consistência, Isolamento, Durabilidade) nas operações de banco de dados.
 
 - **Escrita (create, delete):** Uso de `@Transactional` para garantir **rollback** automático em caso de falha.
-- **Leitura (find*):** Uso de **`@Transactional(readOnly = true)`**, que desativa o "Dirty Checking" do Hibernate, resultando em:
+- **Leitura (find):** Uso de **`@Transactional(readOnly = true)`**, que desativa o "Dirty Checking" do Hibernate, resultando em:
     - Uso **reduzido de memória**.
     - **Melhoria na velocidade** de execução das consultas.
 
