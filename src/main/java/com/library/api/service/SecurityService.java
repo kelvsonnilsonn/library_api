@@ -45,7 +45,7 @@ public class SecurityService {
         if(user.isPresent()){
             throw new UserAlreadyExistsException();
         }
-        Password password = new Password(passwordEncoder.encode(body.password()));
+        Password password = Password.of(body.password(), passwordEncoder);
         User newUser = new User(body.username(), password);
         userRepository.save(newUser);
         String token = tokenService.generateToken(newUser);
