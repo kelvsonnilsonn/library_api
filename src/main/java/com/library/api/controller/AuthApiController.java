@@ -17,13 +17,13 @@ public class AuthApiController implements AuthAPI {
     private final SecurityService securityService;
 
     @PostMapping(AppConstants.LOGIN_PATH)
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO dto){
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO dto){
         AuthResponseDTO response = securityService.login(dto);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping(AppConstants.REGISTER_PATH)
-    public ResponseEntity<?> register(@RequestBody RegisterRequestDTO dto){
+    public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO dto){
         AuthResponseDTO response = securityService.register(dto);
         return ResponseEntity.ok(response);
     }
