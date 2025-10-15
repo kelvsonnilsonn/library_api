@@ -1,8 +1,7 @@
 package com.library.api.service.query;
 
 import com.library.api.dto.PageResponseDTO;
-import com.library.api.dto.borrow.BorrowResponseDTO;
-import com.library.api.mapper.BookMapper;
+import com.library.api.dto.BorrowResponseDTO;
 import com.library.api.mapper.BorrowMapper;
 import com.library.api.model.Borrow;
 import com.library.api.repository.BorrowRepository;

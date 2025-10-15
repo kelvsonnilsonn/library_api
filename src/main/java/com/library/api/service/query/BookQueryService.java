@@ -1,7 +1,7 @@
 package com.library.api.service.query;
 
 import com.library.api.dto.PageResponseDTO;
-import com.library.api.dto.books.BookResponseDTO;
+import com.library.api.dto.BookResponseDTO;
 import com.library.api.enums.BookType;
 import com.library.api.exception.BookNotFoundException;
 import com.library.api.mapper.BookMapper;
