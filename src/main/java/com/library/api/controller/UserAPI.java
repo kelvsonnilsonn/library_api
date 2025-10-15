@@ -1,8 +1,9 @@
 package com.library.api.controller;
 
+import com.library.api.command.user.DeleteUserCommand;
+import com.library.api.command.user.UpdateUsernameCommand;
 import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.UserResponseDTO;
-import com.library.api.dto.UserUpdateDto;
 import com.library.api.util.HttpConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,7 +21,7 @@ public interface UserAPI {
     @ApiResponse(responseCode = HttpConstants.CREATED, description = "Usuário deletado com sucesso")
     @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = HttpConstants.NOT_FOUND_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<String> delete(@PathVariable Long id);
+    ResponseEntity<Void> delete(@RequestBody DeleteUserCommand command);
 
     @Operation(summary = "Procurar um usuário", description = "Procura um usuário")
     @ApiResponse(responseCode = HttpConstants.OK, description = "Usuário encontrado com sucesso")
@@ -43,5 +44,5 @@ public interface UserAPI {
     @ApiResponse(responseCode = HttpConstants.OK, description = "Nome atualizado com sucesso")
     @ApiResponse(responseCode = HttpConstants.BAD_REQUEST, description = HttpConstants.BAD_REQUEST_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<UserResponseDTO> updateName(@RequestBody UserUpdateDto updateDto);
+    ResponseEntity<Void> updateName(@RequestBody UpdateUsernameCommand command);
 }

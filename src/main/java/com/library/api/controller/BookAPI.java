@@ -1,7 +1,8 @@
 package com.library.api.controller;
 
+import com.library.api.command.book.CreateBookCommand;
+import com.library.api.command.book.DeleteBookCommand;
 import com.library.api.dto.PageResponseDTO;
-import com.library.api.dto.books.BookRequestDTO;
 import com.library.api.dto.books.BookResponseDTO;
 import com.library.api.util.HttpConstants;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,13 +22,13 @@ public interface BookAPI {
     @ApiResponse(responseCode = HttpConstants.BAD_REQUEST, description = HttpConstants.BAD_REQUEST_MSG)
     @ApiResponse(responseCode = HttpConstants.CONFLICT, description = "O ISBN inserido já existe")
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<BookResponseDTO> create(@RequestBody BookRequestDTO bookRequestDTO);
+    ResponseEntity<Long> create(@RequestBody CreateBookCommand command);
 
     @Operation(summary = "Deletar um livro", description = "Deleta um livro")
     @ApiResponse(responseCode = HttpConstants.CREATED, description = "Livro deletado com sucesso")
     @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = HttpConstants.NOT_FOUND_MSG)
     @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
-    ResponseEntity<String> delete(@PathVariable Long id);
+    ResponseEntity<Void> delete(@RequestBody DeleteBookCommand command);
 
     @Operation(summary = "Procurar um livro", description = "Procura um livro com ID")
     @ApiResponse(responseCode = HttpConstants.OK, description = "Livro encontrado com sucesso")
