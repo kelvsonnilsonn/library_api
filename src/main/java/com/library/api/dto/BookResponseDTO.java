@@ -1,4 +1,4 @@
-package com.library.api.dto.books;
+package com.library.api.dto;
 
 import com.library.api.enums.BookType;
 import com.library.api.model.ISBN;

@@ -1,4 +1,4 @@
-package com.library.api.dto.borrow;
+package com.library.api.dto;
 
 import java.time.LocalDateTime;
 
