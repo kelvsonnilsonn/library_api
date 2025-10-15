@@ -3,7 +3,7 @@ package com.library.api.controller;
 import com.library.api.command.borrow.BorrowBookCommand;
 import com.library.api.command.borrow.ReturnBookCommand;
 import com.library.api.dto.PageResponseDTO;
-import com.library.api.dto.borrow.BorrowResponseDTO;
+import com.library.api.dto.BorrowResponseDTO;
 import com.library.api.util.HttpConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

@@ -2,8 +2,6 @@ package com.library.api.service.command;
 
 import com.library.api.command.borrow.BorrowBookCommand;
 import com.library.api.command.borrow.ReturnBookCommand;
-import com.library.api.dto.borrow.BorrowRequestDTO;
-import com.library.api.dto.borrow.BorrowResponseDTO;
 import com.library.api.exception.BookAlreadyBorrowedException;
 import com.library.api.exception.BorrowNotFoundException;
 import com.library.api.model.Book;

@@ -2,7 +2,6 @@ package com.library.api.service.command;
 
 import com.library.api.command.book.CreateBookCommand;
 import com.library.api.command.book.DeleteBookCommand;
-import com.library.api.dto.books.BookRequestDTO;
 import com.library.api.exception.BookNotFoundException;
 import com.library.api.mapper.BookMapper;
 import com.library.api.model.Book;

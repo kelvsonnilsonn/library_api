@@ -1,6 +1,6 @@
 package com.library.api.mapper;
 
-import com.library.api.dto.borrow.BorrowResponseDTO;
+import com.library.api.dto.BorrowResponseDTO;
 import com.library.api.model.Borrow;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

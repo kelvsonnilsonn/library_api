@@ -1,8 +1,7 @@
 package com.library.api.mapper;
 
 import com.library.api.command.book.CreateBookCommand;
-import com.library.api.dto.books.BookRequestDTO;
-import com.library.api.dto.books.BookResponseDTO;
+import com.library.api.dto.BookResponseDTO;
 import com.library.api.model.Book;
 import com.library.api.model.User;
 
