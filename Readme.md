@@ -17,24 +17,39 @@ Desenvolvida em Spring Boot, a arquitetura do projeto prioriza a segurança, a m
 ---
 
 ## 🏗️ Arquitetura e Estrutura do Projeto
+
+### Padrões Arquiteturais Implementados
+- **CQRS (Command Query Responsibility Segregation)**: Separação clara entre operações de escrita (Commands) e leitura (Queries)
+- **Domain-Driven Design (DDD)**: Modelagem baseada em domínios ricos com Value Objects
+- **Clean Architecture**: Separação em camadas bem definidas
+- 
+---
+
 ### 📁 Estrutura de Pacotes
 ```text
 src/main/java/com/library/
-├── controller/          # Interfaces e implementações dos controllers
-├── dto/                # Data Transfer Objects (Request/Response)
-│   ├── auth/           # DTOs de autenticação
-│   ├── books/          # DTOs de livros
-│   └── borrow/         # DTOs de empréstimos
-├── model/              # Entidades JPA e objetos de valor
-├── service/            # Lógica de negócio
-├── repository/         # Interfaces de acesso a dados
-├── mapper/             # Conversores entre entidades e DTOs
-├── exception/          # Exceções personalizadas
-├── handler/            # Tratamento global de exceções
-├── enums/              # Enumerações do sistema
-├── security/           # Configurações de segurança e JWT
-└── util/               # Constantes e utilitários
+├── controller/ # APIs REST com separação por interface/implementação
+├── service/
+│ ├── command/ # Serviços de escrita (Commands)
+│ └── query/ # Serviços de leitura (Queries)
+├── model/ # Entidades de domínio (Aggregates)
+│ └── valueobjects/ # Value Objects imutáveis
+├── command/ # Objetos de comando (DTOs de entrada)
+│   ├── book/           # CreateBookCommand, DeleteBookCommand
+│   ├── borrow/         # BorrowBookCommand, ReturnBookCommand  
+│   └── user/           # UpdateUsernameCommand, DeleteUserCommand
+├── dto/ # Data Transfer Objects (DTOs de saída)
+├── repository/ # Repositórios JPA
+├── enums/ # Enumerations do domínio
+├── exception/ # Exceções customizadas
+├── mapper/ # Mapeamento entre objetos (MapStruct)
+├── security/ # Configurações de segurança
+├── handler/ # Tratamento global de exceções
+└── util/ # Constantes e utilitários
 ```
+
+---
+
 ### 🔷 Padrões Arquiteturais Implementados
 #### 1. Separação de Responsabilidades com Interfaces
 ```java
@@ -432,6 +447,8 @@ GET /users/nome?name=joao.silva
 - **Experiência de API** com filtros intuitivos
 - **Segurança** com acesso contextual do usuário
 
+---
+
 ## 🔄 Mudanças Principais (Versões 1.5 → 1.6)
 
 ### **4. 🆕 NOVAS EXCEÇÕES**
@@ -452,6 +469,56 @@ GET /users/nome?name=joao.silva
 - **Verificação de duplicatas**: Username único no sistema
 - **Autenticação contextual**: Operações usam apenas usuário logado
 - **Tratamento granular de erros**: Exceções específicas para cada cenário
+
+---
+
+## 🔄 Mudanças Principais (Versões 1.6 → 1.7)
+
+### 🏗️ Implementação do Padrão CQRS
+
+#### 📚 Separação Commands/Queries
+- **Command Services**: Operações de escrita com `@Transactional`
+- **Query Services**: Operações de leitura com `@Transactional(readOnly = true)`
+- **Command Objects**: Records imutáveis para entrada de dados
+
+#### ⚡ Novos Serviços Especializados
+- **BookCommandService**: Criar e deletar livros
+- **BookQueryService**: Buscar, listar e filtrar livros
+- **BorrowCommandService**: Realizar e devolver empréstimos
+- **BorrowQueryService**: Consultar empréstimos ativos, atrasados e histórico
+- **UserCommandService**: Atualizar e deletar usuários
+- **UserQueryService**: Buscar e listar usuários
+
+#### 📦 Command Objects Implementados
+- **CreateBookCommand**: Criação de livros com validação
+- **DeleteBookCommand**: Exclusão com motivo opcional
+- **BorrowBookCommand**: Realização de empréstimos
+- **ReturnBookCommand**: Devolução de livros
+- **UpdateUsernameCommand**: Atualização de nome de usuário
+- **DeleteUserCommand**: Exclusão de usuários com motivo
+
+#### 🎯 Benefícios Arquiteturais
+- **Separação de responsabilidades**: Escrita vs Leitura
+- **Otimização de performance**: Transações read-only para consultas
+- **Manutenibilidade**: Código mais organizado e focado
+- **Escalabilidade**: Possibilidade de escalar serviços independentemente
+
+#### 🔄 Refatoração de Controladores
+- **Injeção dupla**: Command + Query services nos controllers
+- **Mapeamento direto**: RequestDTO → Command → CommandService
+- **Respostas padronizadas**: Mantendo consistência com DTOs existentes
+
+#### ✅ Adicionado
+- **Arquitetura CQRS completa** para todos os módulos
+- **Command objects** imutáveis com records
+- **Serviços especializados** por tipo de operação
+- **Separação clara** de transações read/write
+
+#### 🎯 Aprimorado
+- **Performance** com transações read-only
+- **Organização** do código por responsabilidade
+- **Manutenibilidade** com serviços focados
+- **Preparação** para escalabilidade futura
 
 ### 💡 Novos Exemplos de Uso
 
