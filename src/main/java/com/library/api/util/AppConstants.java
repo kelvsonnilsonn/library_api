@@ -8,13 +8,12 @@ public class AppConstants {
     // =========== PATHS =========== //
     public static final String BOOK_BASE_PATH = "/livros";
     public static final String ID_PATH = "/{id}";
-    public static final String SEARCH_ISBN_PATH = "/isbn/{isbn}";
-    public static final String SEARCH_TITLE_PATH = "/titulo";
-    public static final String SEARCH_TYPE_PATH = "/tipo";
     public static final String SEARCH_AVAILABLE_PATH = "/disponivel";
+    public static final String EVENT_BASE_PATH = "/events";
+    public static final String ADMIN_PATH = "/admin";
+
 
     public static final String USER_BASE_PATH = "/users";
-    public static final String SEARCH_NAME_PATH = "/nome";
 
     public static final String AUTH_BASE_PATH = "/auth";
     public static final String LOGIN_PATH = "/login";
@@ -25,11 +24,13 @@ public class AppConstants {
     public static final String DUE_PATH = "/atrasados";
     public static final String HISTORY_PATH = "/historico";
 
+    public static final String EVENTS_IN_INTERVAL_PATH = "/interval";
+    public static final String MY_EVENTS_IN_INTERVAL_PATH = "/my-events/interval";
+    public static final String USER_EVENTS_IN_INTERVAL_PATH = "/user-events/interval";
+
 
     // =========== SYSTEM MESSAGES =========== //
 
-    public static final String USER_DELETED_MSG = "A conta %s foi deletada";
-    public static final String BOOK_DELETED_MSG = "O livro %s foi deletado";
     public static final String SUCCESS_PASSWORD_CHANGE_MSG = "A senha foi alterada";
 
     // =========== EXCEPTIONS MESSAGES =========== //
@@ -39,4 +40,14 @@ public class AppConstants {
     public static final String USER_NOT_FOUND_MESSAGE = "O usuário não foi encontrado";
     public static final String BOOK_NOT_FOUND_MESSAGE = "O livro não foi encontrado";
 
+    public static final String PRE_AUTHORIZE_ADMIN_REQUISITION = "hasAuthority('ADMIN_ROLE')";
+    public static final String PRE_AUTHORIZE_ALL_REQUISITION = "permitAll()";
+
+
+    // ============ EVENTS ================ //
+
+    public static final Long SYSTEM_ID = 0L;
+    public static final String AGGREGATE_BOOK_TYPE = "BOOK";
+    public static final String AGGREGATE_BORROW_TYPE = "BORROW";
+    public static final String AGGREGATE_USER_TYPE = "USER";
 }
