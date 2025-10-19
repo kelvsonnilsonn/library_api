@@ -2,20 +2,22 @@ package com.library.api.controller;
 
 import com.library.api.command.borrow.BorrowBookCommand;
 import com.library.api.command.borrow.ReturnBookCommand;
-import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.BorrowResponseDTO;
+import com.library.api.dto.PageResponseDTO;
 import com.library.api.service.command.BorrowCommandService;
 import com.library.api.service.query.BorrowQueryService;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(AppConstants.BORROW_BASE_PATH)
 @RequiredArgsConstructor
-public class BorrowApiController implements BorrowAPI {
+@PreAuthorize(AppConstants.PRE_AUTHORIZE_ALL_REQUISITION)
+public class BorrowController implements BorrowAPI {
 
     private final BorrowCommandService commandService;
     private final BorrowQueryService queryService;

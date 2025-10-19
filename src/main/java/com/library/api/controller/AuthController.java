@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(AppConstants.AUTH_BASE_PATH)
 @RequiredArgsConstructor
-public class AuthApiController implements AuthAPI {
+public class AuthController implements AuthAPI {
 
     private final SecurityService securityService;
 
