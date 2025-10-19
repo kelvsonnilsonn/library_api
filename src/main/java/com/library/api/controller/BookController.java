@@ -62,4 +62,5 @@ public class BookController implements BookAPI{
         PageResponseDTO<BookResponseDTO> books = queryService.findAvailableBooks(pageable);
         return contentVerifier.verifyingContent(books);
     }
+
 }
