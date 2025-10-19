@@ -6,7 +6,6 @@ import com.library.api.event.user.UserDeletedEvent;
 import com.library.api.exception.NameAlreadyInUseUpdateException;
 import com.library.api.exception.UserNotFoundException;
 import com.library.api.model.User;
-import com.library.api.repository.EventStoreRepository;
 import com.library.api.repository.UserRepository;
 import com.library.api.service.AuthenticationInformation;
 import com.library.api.service.EventStoreService;
