@@ -5,7 +5,7 @@ import com.library.api.dto.BookResponseDTO;
 import com.library.api.model.Book;
 import com.library.api.model.User;
 
-public class BookMapper {
+public interface BookMapper {
     public static Book dtoToBook(CreateBookCommand command, User author){
         return new Book(author, command.type(), command.isbn(), command.title());
     }
