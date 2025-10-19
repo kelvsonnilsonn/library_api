@@ -1,5 +1,6 @@
 package com.library.api.model;
 
+import com.library.api.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,9 +28,13 @@ public class User {
 
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     public User(String username, Password password){
         this.username = username;
         this.password = password;
+        this.role = UserRole.USER_ROLE;
         this.createdAt = LocalDateTime.now();
     }
 
