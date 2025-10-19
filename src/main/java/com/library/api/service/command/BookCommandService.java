@@ -35,7 +35,7 @@ public class BookCommandService {
 
     public void delete(DeleteBookCommand command) {
         Long userId = authenticationInformation.getAuthenticatedUser().getId();
-        Book book = bookRepository.findByBookIdAndAuthorId(command.bookId(), userId).orElseThrow(BookNotFoundException::new);
+        Book book = bookRepository.findByIdAndAuthorId(command.bookId(), userId).orElseThrow(BookNotFoundException::new);
         bookRepository.delete(book);
         BookDeletedEvent event = new BookDeletedEvent(book.getId(), command.reason(), userId);
         eventStoreService.saveEvent(AppConstants.AGGREGATE_BOOK_TYPE, book.getId(), event);

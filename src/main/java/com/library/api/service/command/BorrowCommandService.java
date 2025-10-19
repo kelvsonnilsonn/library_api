@@ -43,13 +43,13 @@ public class BorrowCommandService {
     }
 
     public void returnBook(ReturnBookCommand command){
-        User user = authenticationInformation.getAuthenticatedUser();
-        Borrow borrowedBook = borrowRepository.findByBookIdAndUserAndReturnDateIsNull(command.bookId(), user)
+        Long userId = authenticationInformation.getAuthenticatedUser().getId();
+        Borrow borrowedBook = borrowRepository.findByBookIdAndUserAndReturnDateIsNull(command.bookId(), userId)
                 .orElseThrow(BorrowNotFoundException::new);
         borrowedBook.setReturnDate(LocalDateTime.now());
         borrowRepository.save(borrowedBook);
         BookReturnedEvent event = new BookReturnedEvent(borrowedBook.getId(),
-                borrowedBook.getBookId(), user.getId(),
+                borrowedBook.getBookId(), userId,
                 borrowedBook.getReturnDate(), borrowedBook.getBorrowDate(), borrowedBook.wasOverdue());
         eventStoreService.saveEvent(AppConstants.AGGREGATE_BORROW_TYPE, borrowedBook.getId(), event);
     }
