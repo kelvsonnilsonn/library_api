@@ -3,6 +3,7 @@ package com.library.api.service;
 import com.library.api.dto.auth.AuthResponseDTO;
 import com.library.api.dto.auth.LoginRequestDTO;
 import com.library.api.dto.auth.RegisterRequestDTO;
+import com.library.api.event.user.UserCreatedEvent;
 import com.library.api.exception.FailedLoginAttemptException;
 import com.library.api.exception.PasswordAlreadyInUseUpdateException;
 import com.library.api.exception.UserAlreadyExistsException;
@@ -28,6 +29,7 @@ public class SecurityService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
     private final AuthenticationInformation authenticationInformation;
+    private final EventStoreService eventStoreService;
 
     @Transactional(readOnly = true)
     public AuthResponseDTO login(@RequestBody LoginRequestDTO body){
@@ -47,8 +49,10 @@ public class SecurityService {
         }
         Password password = Password.of(body.password(), passwordEncoder);
         User newUser = new User(body.username(), password);
-        userRepository.save(newUser);
+        User savedUser = userRepository.save(newUser);
         String token = tokenService.generateToken(newUser);
+        UserCreatedEvent event = new UserCreatedEvent(savedUser.getId(), savedUser.getUsername());
+        eventStoreService.saveEvent(AppConstants.AGGREGATE_USER_TYPE, savedUser.getId(), event);
         return new AuthResponseDTO(token, newUser.getUsername());
     }
 
