@@ -42,4 +42,12 @@ public class Borrow {
     public boolean isReturned(){
         return returnDate != null;
     }
+
+    public Long getBookId(){
+        return book.getId();
+    }
+
+    public boolean wasOverdue(){
+        return dueDate.isAfter(returnDate);
+    }
 }
