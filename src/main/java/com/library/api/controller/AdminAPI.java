@@ -1,5 +1,7 @@
 package com.library.api.controller;
 
+import com.library.api.command.book.DeleteBookCommand;
+import com.library.api.command.user.DeleteUserCommand;
 import com.library.api.dto.EventIntervalDTO;
 import com.library.api.dto.PageResponseDTO;
 import com.library.api.dto.UserEventsIntervalDTO;
@@ -14,6 +16,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 public interface AdminAPI {
+
+    // SEÇÃO DE LIVROS
+
+    @Operation(summary = "Excluir livro", description = "Exclui um livro permanentemente do sistema (apenas administradores)")
+    @ApiResponse(responseCode = HttpConstants.OK, description = "Livro excluído com sucesso")
+    @ApiResponse(responseCode = HttpConstants.UNAUTHORIZED, description = HttpConstants.UNAUTHORIZED_MSG)
+    @ApiResponse(responseCode = HttpConstants.FORBIDDEN, description = HttpConstants.FORBIDDEN_MSG)
+    @ApiResponse(responseCode = HttpConstants.BAD_REQUEST, description = "Dados de exclusão inválidos")
+    @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = "Livro não encontrado")
+    @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
+    ResponseEntity<Void> deleteById(@RequestBody @Valid DeleteBookCommand command);
+
+    // SEÇÃO DE USUÁRIOS
+
+    @Operation(summary = "Excluir usuário", description = "Exclui um usuário do sistema (apenas administradores)")
+    @ApiResponse(responseCode = HttpConstants.OK, description = "Usuário excluído com sucesso")
+    @ApiResponse(responseCode = HttpConstants.UNAUTHORIZED, description = HttpConstants.UNAUTHORIZED_MSG)
+    @ApiResponse(responseCode = HttpConstants.FORBIDDEN, description = HttpConstants.FORBIDDEN_MSG)
+    @ApiResponse(responseCode = HttpConstants.BAD_REQUEST, description = "Dados de exclusão inválidos")
+    @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = "Usuário não encontrado")
+    @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
+    ResponseEntity<Void> delete(@RequestBody @Valid DeleteUserCommand command);
+
+    @Operation(summary = "Buscar usuários", description = """
+        Busca usuários por diferentes critérios.
+        Prioridade: id > nome > todos.
+        Exemplos:
+        - ?id=123 → Usuário específico por ID
+        - ?name=joao → Usuário por nome
+        - Sem parâmetros → Todos usuários (paginação)
+        """)
+    @ApiResponse(responseCode = HttpConstants.OK, description = "Usuário(s) retornado(s) com sucesso")
+    @ApiResponse(responseCode = HttpConstants.UNAUTHORIZED, description = HttpConstants.UNAUTHORIZED_MSG)
+    @ApiResponse(responseCode = HttpConstants.FORBIDDEN, description = HttpConstants.FORBIDDEN_MSG)
+    @ApiResponse(responseCode = HttpConstants.BAD_REQUEST, description = "Parâmetros de busca inválidos")
+    @ApiResponse(responseCode = HttpConstants.NOT_FOUND, description = "Usuário não encontrado")
+    @ApiResponse(responseCode = HttpConstants.SERVER_ERROR, description = HttpConstants.INTERN_SERVER_ERROR_MSG)
+    ResponseEntity<?> findUser(Pageable pageable,
+                               @RequestParam(required = false) Long id,
+                               @RequestParam(required = false) String name);
+
+    // SEÇÃO DE EVENTOS
 
     @Operation(summary = "Buscar eventos", description = """
         Busca eventos por diferentes critérios.

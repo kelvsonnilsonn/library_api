@@ -9,6 +9,7 @@ import com.library.api.event.EventStore;
 import com.library.api.service.EventStoreService;
 import com.library.api.service.command.BookCommandService;
 import com.library.api.service.command.UserCommandService;
+import com.library.api.service.query.UserQueryService;
 import com.library.api.util.AppConstants;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class AdminController implements AdminAPI {
     private final EventStoreService eventStoreService;
     private final UserCommandService userCommandService;
     private final BookCommandService bookCommandService;
+    private final UserQueryService userQueryService;
 
     // SEÇÃO DE LIVROS
 
@@ -41,6 +43,17 @@ public class AdminController implements AdminAPI {
     public ResponseEntity<Void> delete(@RequestBody @Valid DeleteUserCommand command) {
         userCommandService.delete(command);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping(AppConstants.USER_BASE_PATH)
+    public ResponseEntity<?> findUser(Pageable pageable, @RequestParam(required=false) Long id, @RequestParam(required = false) String name){
+        if(id != null){
+            return ResponseEntity.ok(userQueryService.findById(id));
+        }
+        if(name != null){
+            return ResponseEntity.ok(userQueryService.findByUsername(name));
+        }
+        return ResponseEntity.ok(userQueryService.findAll(pageable));
     }
 
     // SEÇÃO DE EVENTOS
