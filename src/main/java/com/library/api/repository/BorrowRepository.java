@@ -14,8 +14,11 @@ import java.util.Optional;
 public interface BorrowRepository extends JpaRepository<Borrow, Long> {
 
     boolean existsByBookAndReturnDateIsNull(Book book);
-    Optional<Borrow> findByBookIdAndUserAndReturnDateIsNull(Long bookId, User user);
+
     Page<Borrow> findByUserAndReturnDateIsNull(Pageable pageable, User user);
+
+    @Query("SELECT b FROM Borrow b WHERE b.book.id = :bookId AND b.user.id = :userId AND b.returnDate IS NULL")
+    Optional<Borrow> findByBookIdAndUserAndReturnDateIsNull(Long bookId, Long userId);
 
     @Query("SELECT b FROM Borrow b WHERE b.user = :user AND b.returnDate IS NULL AND b.dueDate < :currentDate")
     Page<Borrow> findOverdueByUser(Pageable pageable, User user, LocalDateTime currentDate);
