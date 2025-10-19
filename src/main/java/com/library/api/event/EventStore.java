@@ -25,7 +25,7 @@ public class EventStore {
     private String eventType;
 
     @Type(JsonType.class)
-//    @Column(columnDefinition = "JSON")
+    @Column(columnDefinition = "JSON")
     private Object eventData;
 
     private LocalDateTime createdAt;
