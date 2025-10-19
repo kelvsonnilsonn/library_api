@@ -21,4 +21,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     @Query("SELECT b FROM Book b WHERE NOT EXISTS (SELECT 1 FROM Borrow br WHERE br.book.id = b.id AND br.returnDate IS NULL)")
     Page<Book> findAvailableBooks(Pageable pageable);
+
+    Optional<Book> findByBookIdAndAuthorId(Long bookId, Long authorId);
 }
