@@ -32,7 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if(login != null) {
             User user = userRepository.findByUsername(login).orElseThrow(() -> new RuntimeException("User não encontrado"));
-            var authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
+            var authorities = Collections.singleton(new SimpleGrantedAuthority(user.getRole().name()));
             var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
