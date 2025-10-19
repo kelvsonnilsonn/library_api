@@ -12,7 +12,6 @@ public class AppConstants {
     public static final String EVENT_BASE_PATH = "/events";
     public static final String ADMIN_PATH = "/admin";
 
-
     public static final String USER_BASE_PATH = "/users";
 
     public static final String AUTH_BASE_PATH = "/auth";
@@ -46,7 +45,6 @@ public class AppConstants {
 
     // ============ EVENTS ================ //
 
-    public static final Long SYSTEM_ID = 0L;
     public static final String AGGREGATE_BOOK_TYPE = "BOOK";
     public static final String AGGREGATE_BORROW_TYPE = "BORROW";
     public static final String AGGREGATE_USER_TYPE = "USER";
