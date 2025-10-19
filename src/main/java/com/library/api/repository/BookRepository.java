@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface BookRepository extends JpaRepository<Book, Long> {
 
+    @Query("SELECT b FROM Book b WHERE b.isbn.number = :isbn")
     Optional<Book> findByIsbn(String isbn);
 
     @Query("SELECT b FROM Book b WHERE LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%'))")
@@ -22,5 +23,6 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     @Query("SELECT b FROM Book b WHERE NOT EXISTS (SELECT 1 FROM Borrow br WHERE br.book.id = b.id AND br.returnDate IS NULL)")
     Page<Book> findAvailableBooks(Pageable pageable);
 
-    Optional<Book> findByBookIdAndAuthorId(Long bookId, Long authorId);
+    @Query("SELECT b FROM Book b WHERE b.id = :bookId AND b.author.id = :authorId")
+    Optional<Book> findByIdAndAuthorId(Long bookId, Long authorId);
 }
