@@ -40,6 +40,10 @@ public class Book {
         this.createdAt = LocalDateTime.now();
     }
 
+    public String getIsbnNumber(){
+        return isbn.getNumber();
+    }
+
     public Long getAuthorId(){
         return this.author.getId();
     }
