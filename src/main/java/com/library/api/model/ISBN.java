@@ -10,11 +10,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Embeddable
 @Getter
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ISBN {
+public class ISBN implements Serializable {
     @Column(name = "isbn_number", unique = true, nullable = false)
     private String number;
 
