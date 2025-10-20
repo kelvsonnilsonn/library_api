@@ -3,6 +3,7 @@ package com.library.api.dto;
 import com.library.api.enums.BookType;
 import com.library.api.model.ISBN;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public record BookResponseDTO (
@@ -12,5 +13,5 @@ public record BookResponseDTO (
         Long authorId,
         BookType type,
         LocalDateTime createdAt
-) {
+) implements Serializable {
 }
