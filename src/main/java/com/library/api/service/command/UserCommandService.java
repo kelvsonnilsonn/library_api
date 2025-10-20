@@ -11,6 +11,8 @@ import com.library.api.service.AuthenticationInformation;
 import com.library.api.service.EventStoreService;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ public class UserCommandService {
     private final AuthenticationInformation authenticationInformation;
     private final EventStoreService eventStoreService;
 
+    @CacheEvict(value = {"users", "users-name"}, allEntries = true)
     public void delete(DeleteUserCommand command){
         User user = userRepository.findById(command.userId()).orElseThrow(UserNotFoundException::new);
         userRepository.delete(user);
@@ -30,6 +33,7 @@ public class UserCommandService {
         eventStoreService.saveEvent(AppConstants.AGGREGATE_USER_TYPE, user.getId(), event);
     }
 
+    @CacheEvict(value = {"users", "users-name"}, allEntries = true)
     public void update(UpdateUsernameCommand command){
         User user = authenticationInformation.getAuthenticatedUser();
         if(command.newName() != null && command.newName().equals(user.getUsername())){

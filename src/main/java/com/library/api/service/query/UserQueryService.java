@@ -7,6 +7,7 @@ import com.library.api.mapper.UserMapper;
 import com.library.api.model.User;
 import com.library.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,13 @@ public class UserQueryService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
+    @Cacheable("users")
     public UserResponseDTO findById(Long userId){
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         return userMapper.toResponse(user);
     }
 
+    @Cacheable("users-name")
     public UserResponseDTO findByUsername(String username){
         User user = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
         return userMapper.toResponse(user);

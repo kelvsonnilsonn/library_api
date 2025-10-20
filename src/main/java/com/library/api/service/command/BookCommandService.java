@@ -13,6 +13,7 @@ import com.library.api.service.AuthenticationInformation;
 import com.library.api.service.EventStoreService;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,7 @@ public class BookCommandService {
     private final AuthenticationInformation authenticationInformation;
     private final EventStoreService eventStoreService;
 
+    @CacheEvict(value = {"books", "books-isbn", "books-title"}, allEntries = true)
     public Long create(CreateBookCommand command){
         User author = authenticationInformation.getAuthenticatedUser();
         Book savedBook = bookRepository.save(BookMapper.dtoToBook(command, author));
@@ -33,6 +35,7 @@ public class BookCommandService {
         return savedBook.getId();
     }
 
+    @CacheEvict(value = {"books", "books-isbn", "books-title", "borrows", "my-borrows", "my-overdues"}, allEntries = true)
     public void delete(DeleteBookCommand command) {
         Long userId = authenticationInformation.getAuthenticatedUser().getId();
         Book book = bookRepository.findByIdAndAuthorId(command.bookId(), userId).orElseThrow(BookNotFoundException::new);
@@ -41,6 +44,7 @@ public class BookCommandService {
         eventStoreService.saveEvent(AppConstants.AGGREGATE_BOOK_TYPE, book.getId(), event);
     }
 
+    @CacheEvict(value = {"books", "books-isbn", "books-title", "borrows", "my-borrows", "my-overdues"}, allEntries = true)
     public void deleteByAdmin(DeleteBookCommand command) {
         Book book = bookRepository.findById(command.bookId()).orElseThrow(BookNotFoundException::new);
         bookRepository.delete(book);

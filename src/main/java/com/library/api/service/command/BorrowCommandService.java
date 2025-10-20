@@ -15,6 +15,8 @@ import com.library.api.service.EventStoreService;
 import com.library.api.service.query.BookQueryService;
 import com.library.api.util.AppConstants;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class BorrowCommandService {
     private final AuthenticationInformation authenticationInformation;
     private final EventStoreService eventStoreService;
 
+    @CacheEvict(value = {"books", "borrows", "my-borrows", "my-overdues"}, allEntries = true)
     public void borrowBook(BorrowBookCommand command){
         User user = authenticationInformation.getAuthenticatedUser();
         Book book = bookQueryService.findEntityById(command.bookId());
@@ -42,6 +45,7 @@ public class BorrowCommandService {
         eventStoreService.saveEvent(AppConstants.AGGREGATE_BORROW_TYPE, bookToBorrow.getId(), event);
     }
 
+    @CacheEvict(value = {"books", "borrows", "my-borrows", "my-overdues"}, allEntries = true)
     public void returnBook(ReturnBookCommand command){
         Long userId = authenticationInformation.getAuthenticatedUser().getId();
         Borrow borrowedBook = borrowRepository.findByBookIdAndUserAndReturnDateIsNull(command.bookId(), userId)

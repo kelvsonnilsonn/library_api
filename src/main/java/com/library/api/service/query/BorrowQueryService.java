@@ -7,6 +7,7 @@ import com.library.api.model.Borrow;
 import com.library.api.repository.BorrowRepository;
 import com.library.api.service.AuthenticationInformation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -29,12 +30,14 @@ public class BorrowQueryService {
         return PageResponseDTO.fromPage(page);
     }
 
+    @Cacheable("my-overdues")
     public PageResponseDTO<BorrowResponseDTO> findOverdueBorrows(Pageable pageable){
         Page<Borrow> borrows = borrowRepository.findOverdueByUser(pageable, authenticationInformation.getAuthenticatedUser(), LocalDateTime.now());
         Page<BorrowResponseDTO> page = borrows.map(borrowMapper::toResponse);
         return PageResponseDTO.fromPage(page);
     }
 
+    @Cacheable("my-borrows")
     public PageResponseDTO<BorrowResponseDTO> getUserBorrowHistory(Pageable pageable){
         Page<BorrowResponseDTO> page = borrowRepository.getUserBorrowHistory(pageable, authenticationInformation.getAuthenticatedUser()).map(borrowMapper::toResponse);
         return PageResponseDTO.fromPage(page);

@@ -8,6 +8,7 @@ import com.library.api.mapper.BookMapper;
 import com.library.api.model.Book;
 import com.library.api.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class BookQueryService {
 
     private final BookRepository bookRepository;
 
+    @Cacheable("books")
     public BookResponseDTO findById(Long id){
         Book book = findEntityById(id);
         return BookMapper.toResponse(book);
@@ -30,11 +32,13 @@ public class BookQueryService {
         return PageResponseDTO.fromPage(books);
     }
 
+    @Cacheable("books-isbn")
     public BookResponseDTO findByIsbn(String isbn){
         Book book = bookRepository.findByIsbn(isbn).orElseThrow(BookNotFoundException::new);
         return BookMapper.toResponse(book);
     }
 
+    @Cacheable("books-title")
     public PageResponseDTO<BookResponseDTO> findByTitle(Pageable pageable, String title){
         Page<BookResponseDTO> books = bookRepository.findByTitle(pageable, title).map(BookMapper::toResponse);
         return PageResponseDTO.fromPage(books);
