@@ -41,6 +41,7 @@ src/main/java/com/library/
 ├── dto/ # Data Transfer Objects (DTOs de saída)
 ├── repository/ # Repositórios JPA
 ├── enums/ # Enumerations do domínio
+├── events/ # Eventos do sistema
 ├── exception/ # Exceções customizadas
 ├── mapper/ # Mapeamento entre objetos (MapStruct)
 ├── security/ # Configurações de segurança
@@ -245,6 +246,37 @@ mvn spring-boot:run
 | **POST** | `/auth/register` | Registrar novo usuário | 200, 400, 409 |
 | **PUT** | `/auth/password?password={novaSenha}` | Alterar senha do usuário logado | 200, 400, 409 |
 
+### 📊 Event Sourcing e Auditoria
+- **Event Store**: Armazenamento de todos os eventos do sistema
+- **Auditoria Completa**: Rastreamento de todas as operações
+- **Consulta Temporal**: Busca de eventos por intervalo de datas
+
+#### 📈 Endpoints de Eventos (Protegidos)
+| Método     | Endpoint | Descrição | Permissão |
+|------------|----------|-----------|-----------|
+| **GET**    | `/events` | Meus eventos | Todos |
+| **POST**   | `/events/my-events/interval` | Meus eventos por intervalo | Todos |
+| **GET**    | `/admin/events` | Todos os eventos (com filtros) | Admin |
+| **POST**   | `/admin/events/interval` | Eventos do sistema por intervalo | Admin |
+| **POST**   | `/admin/events/user-events/interval` | Eventos de usuário por intervalo | Admin |
+
+#### 🔍 Filtros de Eventos (Admin)
+- Por usuário: `?userId={id}`
+- Por aggregate: `?aggregateId={id}`
+- Por tipo: `?aggregateType={type}`
+
+### 🛡️ Painel Administrativo
+- **Acesso Restrito**: Requer role `ADMIN_ROLE`
+- **Gestão Avançada**: Operações administrativas completas
+- **Auditoria Sistema**: Visualização de todos os eventos
+
+#### ⚡ Endpoints Admin
+| Método      | Endpoint | Descrição |
+|-------------|----------|-----------|
+| **DELETE**  | `/admin/livros` | Deletar livro (admin) |
+| **DELETE**  | `/admin/users` | Deletar usuário (admin) |
+| **GET**     | `/admin/users` | Buscar usuários (com filtros) |
+
 ### 📚 Gestão de Livros (Protegido)
 | Método | Endpoint | Descrição | Códigos de Resposta |
 | :--- | :--- | :--- | :--- |
@@ -277,6 +309,30 @@ mvn spring-boot:run
 ---
 
 ## 🎯 Funcionalidades Principais
+
+### 🚀 Otimização com Cache
+- **Spring Cache**: Cacheamento de consultas frequentes
+- **Invalidação Inteligente**: Cache evict em operações de escrita
+- **Performance**: Redução de carga no banco de dados
+
+#### 🔄 Estratégias de Cache
+- `books`: Consultas de livros
+- `books-isbn`: Busca por ISBN
+- `books-title`: Busca por título
+- `borrows`: Empréstimos
+- `my-borrows`: Meus empréstimos
+- `my-overdues`: Empréstimos atrasados
+
+### 📦 Novos Padrões de Commands
+- **DeleteBookCommand**: Exclusão com motivo
+- **DeleteUserCommand**: Exclusão com motivo e userId
+- **Event Objects**: Estruturas imutáveis para eventos
+
+### 🎫 Sistema de Eventos
+- **BookCreatedEvent**: Criação de livros
+- **BookDeletedEvent**: Exclusão de livros
+- **UserCreatedEvent**: Criação de usuários
+- **BookBorrowedEvent**: Empréstimo de livros
 
 ### 🔐 Segurança de Dados
 - Password Validation: Validação de senha com mínimo de 3 caracteres
@@ -349,20 +405,22 @@ public class AppConstants {
     public static final String BORROW_BASE_PATH = "/borrow";
     public static final String LOGIN_PATH = "/login";
     public static final String REGISTER_PATH = "/register";
-    public static final String ID_PATH = "/{id}";
-    public static final String SEARCH_ISBN_PATH = "/isbn/{isbn}";
-    public static final String SEARCH_TITLE_PATH = "/titulo";
-    public static final String SEARCH_TYPE_PATH = "/tipo";
-    public static final String SEARCH_AVAILABLE_PATH = "/disponivel";
-    public static final String SEARCH_NAME_PATH = "/nome";
-    public static final String DUE_PATH = "/atrasados";
-    public static final String HISTORY_PATH = "/historico";
-    public static final String CHANGE_PASSWORD_PATH = "/password";
+    // ...
 
-    // =========== MENSAGENS =========== //
-    public static final String BOOK_NOT_FOUND_MESSAGE = "O livro não foi encontrado";
-    public static final String USER_DELETED_MSG = "Usuário '%s' deletado com sucesso";
-    public static final String SUCCESS_PASSWORD_CHANGE_MSG = "Senha alterada com sucesso";
+    // NOVOS PATHS
+    public static final String ADMIN_PATH = "/admin";
+    public static final String EVENT_BASE_PATH = "/events";
+    public static final String EVENTS_IN_INTERVAL_PATH = "/interval";
+    public static final String MY_EVENTS_IN_INTERVAL_PATH = "/my-events/interval";
+    public static final String USER_EVENTS_IN_INTERVAL_PATH = "/user-events/interval";
+
+    // NOVAS PERMISSÕES
+    public static final String PRE_AUTHORIZE_ADMIN_REQUISITION = "hasAuthority('ADMIN_ROLE')";
+
+    // NOVOS TIPOS DE AGGREGATE
+    public static final String AGGREGATE_BOOK_TYPE = "BOOK";
+    public static final String AGGREGATE_BORROW_TYPE = "BORROW";
+    public static final String AGGREGATE_USER_TYPE = "USER";
     
     // ... mais constantes
 }
@@ -426,26 +484,34 @@ GET /livros/disponivel
 GET /users/nome?name=joao.silva
 ```
 
-## 🔄 Mudanças Principais (Versões 1.4 → 1.5)
+## 🔄 Mudanças Principais (Versões 1.7 → 1.8)
 
-### 🔍 Sistema de Buscas e Filtros
-- **Busca por título**: Filtro parcial case-insensitive
-- **Busca por gênero**: Conversão automática String → Enum
-- **Livros disponíveis**: Filtro inteligente por status
+#### 🏛️ Sistema de Event Sourcing
+- **Event Store**: Armazenamento completo de todos os eventos
+- **Auditoria**: Rastreamento temporal de operações
+- **Consultas Avançadas**: Filtros por data, usuário e aggregate
 
-### 🎯 Componentes de Auxílio
-- **AuthenticationInformation**: Acesso centralizado ao usuário autenticado
+#### 👑 Painel Administrativo
+- **Role-based Access**: Controle de acesso ADMIN_ROLE
+- **Gestão Completa**: Operações administrativas
+- **Monitoramento**: Visualização de eventos do sistema
+
+#### ⚡ Sistema de Cache
+- **Otimização de Performance**: Cache em consultas frequentes
+- **Invalidação Inteligente**: Limpeza automática em escritas
+- **Redução de Latência**: Melhoria no tempo de resposta
 
 #### ✅ Adicionado
-- **Sistema completo de empréstimos** (borrow, return, history)
-- **Buscas avançadas** em livros (título, tipo, disponibilidade)
-- **Busca de usuários** por username
-- **Componentes auxiliares** para autenticação e conteúdo
+- **Event Sourcing completo** para auditoria
+- **Sistema administrativo** com controle de acesso
+- **Estratégia de cache** para otimização
+- **Novos commands** para operações administrativas
 
 #### 🎯 Aprimorado
-- **Padronização de respostas** HTTP (204 No Content)
-- **Experiência de API** com filtros intuitivos
-- **Segurança** com acesso contextual do usuário
+- **Segurança** com controle de roles
+- **Performance** com sistema de cache
+- **Monitorabilidade** com event sourcing
+- **Manutenibilidade** com separação clara de concerns
 
 ---
 
