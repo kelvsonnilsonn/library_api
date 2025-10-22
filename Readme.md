@@ -5,14 +5,19 @@ Desenvolvida em Spring Boot, a arquitetura do projeto prioriza a segurança, a m
 ---
 
 ## ⚙️ Tecnologias Utilizadas
-### Tecnologia	        Versão/Propósito
--   Java	                JDK 21
--   Spring Boot	        3.5.6
--   ORM	                Spring Data JPA / Hibernate
--   Banco de Dados	    `MySQL` (Com mysql-connector-j)
--   Documentação	    `springdoc-openapi-starter-webmvc-ui` (Swagger UI)
--   Segurança	        `Spring Security` + `Java JWT` (Auth0)
--   Utilidades	        `Lombok`, Spring DevTools, `MapStruct`
+
+### Tecnologia	                Versão/Propósito
+- Java	                        JDK 21
+- Spring Boot	                3.5.6
+- ORM	                        Spring Data JPA / Hibernate
+- Banco de Dados	            `MySQL` (mysql-connector-j) + `H2` (Testes)
+- Cache	                        `Spring Cache` + `Redis`
+- Documentação	                `springdoc-openapi-starter-webmvc-ui` (2.8.13)
+- Segurança	                    `Spring Security` + `Java JWT` (Auth0 - 4.4.0)
+- JSON em Banco	            `Hypersistence Utils` (3.9.4)
+- Utilidades	                `Lombok`, `MapStruct` (1.6.0.Beta1), Spring DevTools
+- Containerização	            `Spring Boot Docker Compose`
+- Logging	                    `Logback` (1.5.19)
 
 ---
 
@@ -22,7 +27,7 @@ Desenvolvida em Spring Boot, a arquitetura do projeto prioriza a segurança, a m
 - **CQRS (Command Query Responsibility Segregation)**: Separação clara entre operações de escrita (Commands) e leitura (Queries)
 - **Domain-Driven Design (DDD)**: Modelagem baseada em domínios ricos com Value Objects
 - **Clean Architecture**: Separação em camadas bem definidas
-- 
+
 ---
 
 ### 📁 Estrutura de Pacotes
